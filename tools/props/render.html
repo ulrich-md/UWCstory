@@ -1,0 +1,69 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+const q = new URLSearchParams(location.search);
+const name = q.get('m'), S = +(q.get('size') || 1024);
+const yaw = +(q.get('yaw') || 0), pitch = +(q.get('pitch') || 90), roll = +(q.get('roll') || 0);
+const rx = +(q.get('rx') || 0), ry = +(q.get('ry') || 0), rz = +(q.get('rz') || 0);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(S, S);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = +(q.get('exp') || 1.0);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.setClearColor(0x000000, 0);
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const pm = new THREE.PMREMGenerator(renderer);
+const hdr = await new RGBELoader().loadAsync('hdri/studio.hdr');
+scene.environment = pm.fromEquirectangular(hdr).texture;
+scene.environmentIntensity = +(q.get('env') || 0.7);
+const gltf = await new GLTFLoader().loadAsync(`models/${name}/${name}_${q.get('res')||'2k'}.gltf`);
+const obj = gltf.scene;
+obj.rotation.set(THREE.MathUtils.degToRad(rx), THREE.MathUtils.degToRad(ry), THREE.MathUtils.degToRad(rz));
+const hide = (q.get('hide') || '').split(',').filter(Boolean);
+obj.traverse(o => {
+  if (hide.some(h => o.name === h)) o.visible = false;
+  if (!o.isMesh) return;
+  o.castShadow = true; o.receiveShadow = true;
+  const mats = Array.isArray(o.material) ? o.material : [o.material];
+  mats.forEach((m, k) => {
+    if (/(_glass|_lense)$/i.test(m.name)) {
+      // transmission renders black on a transparent canvas: use a thin reflective glass instead
+      const g = new THREE.MeshPhysicalMaterial({ color: 0xdfeef2, metalness: 0, roughness: 0.04, transparent: true, opacity: +(q.get('glassop') || 0.16), envMapIntensity: 1.6, clearcoat: 1, clearcoatRoughness: 0.03, depthWrite: false });
+      if (Array.isArray(o.material)) o.material[k] = g; else o.material = g;
+      o.castShadow = false;
+    }
+  });
+});
+scene.add(obj);
+// sit the object on the ground plane, centred
+let box = new THREE.Box3().setFromObject(obj);
+const c = box.getCenter(new THREE.Vector3());
+obj.position.sub(new THREE.Vector3(c.x, box.min.y, c.z));
+box = new THREE.Box3().setFromObject(obj);
+const size = box.getSize(new THREE.Vector3()); const R = size.length() / 2;
+// ground that only shows the shadow
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(R * 20, R * 20), new THREE.ShadowMaterial({ opacity: +(q.get('shadow') || 0.45) }));
+ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+// key light from screen top-left (matches the site)
+const key = new THREE.DirectionalLight(0xfff1dc, +(q.get('key') || 2.6));
+const camDir = new THREE.Vector3().setFromSphericalCoords(1, THREE.MathUtils.degToRad(90 - pitch), THREE.MathUtils.degToRad(yaw));
+key.position.set(-R * 1.3, R * 4.2, -R * 1.0).applyAxisAngle(new THREE.Vector3(0,1,0), THREE.MathUtils.degToRad(yaw));
+key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.radius = 6; key.shadow.bias = -0.0004;
+const sc = key.shadow.camera; sc.left = sc.bottom = -R * 3; sc.right = sc.top = R * 3; sc.near = 0.01; sc.far = R * 20;
+scene.add(key);
+const fill = new THREE.DirectionalLight(0xdfe8ff, 0.35); fill.position.set(R * 2, R, R * 2); scene.add(fill);
+// orthographic camera framing the object
+const pad = +(q.get('pad') || 1.12);
+const cam = new THREE.OrthographicCamera(-R * pad, R * pad, R * pad, -R * pad, 0.001, R * 50);
+cam.position.copy(camDir.multiplyScalar(R * 10)).add(new THREE.Vector3(0, size.y / 2, 0));
+cam.up.set(0, 1, 0); if (pitch > 89) cam.up.set(0, 0, -1).applyAxisAngle(new THREE.Vector3(0,1,0), THREE.MathUtils.degToRad(yaw));
+cam.lookAt(0, size.y / 2, 0); cam.rotateZ(THREE.MathUtils.degToRad(roll));
+renderer.render(scene, cam);
+window.__done = renderer.domElement.toDataURL('image/png');
+</script></body></html>

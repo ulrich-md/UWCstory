@@ -42,6 +42,7 @@
   --tex-paper: url("../assets/tex/paper.webp");
   --tex-card: url("../assets/tex/cardboard.webp");
   --tex-paper-soft: url("../assets/tex/paper-soft.webp");
+  --tex-desk: url("../assets/tex/desk.webp");
 
   /* one warm key light from the top-left: every shadow falls down and to the right */
   --sh-sm: 2px 3px 3px rgba(0, 0, 0, 0.35);
@@ -244,8 +245,25 @@ h1, h2, h3, p, figure, dl, dd { margin: 0; }
   gap: clamp(28px, 5vh, 54px);
   padding: clamp(90px, 13vh, 140px) var(--gutter) clamp(40px, 7vh, 80px);
   isolation: isolate;
+  overflow: clip;
+  background:
+    radial-gradient(ellipse 70% 60% at 32% 30%, rgba(255, 214, 160, 0.16), transparent 70%),
+    radial-gradient(ellipse 120% 100% at 40% 35%, transparent 45%, rgba(0, 0, 0, 0.72)),
+    var(--tex-desk) 0 0 / 820px auto,
+    #2a1a10;
+  box-shadow: inset 0 -40px 60px -30px rgba(0, 0, 0, 0.8);
 }
 .spot--deck { z-index: -1; }
+.deck::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 16px;
+  background: linear-gradient(180deg, rgba(255, 220, 180, 0.22), rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55)), var(--tex-desk) 0 0 / 820px auto, #1c110a;
+  box-shadow: 0 14px 22px rgba(0, 0, 0, 0.75);
+}
 
 .deck__stamp {
   position: absolute;
@@ -270,6 +288,17 @@ h1, h2, h3, p, figure, dl, dd { margin: 0; }
   justify-content: center;
   width: min(1040px, 100%);
 }
+
+/* ── Real props (pre-rendered, shadows baked in) ───────── */
+.prop { position: absolute; height: auto; pointer-events: none; user-select: none; }
+.prop--camera { z-index: 1; left: max(-40px, calc(50% - 760px)); bottom: clamp(-40px, -2vh, 0px); width: clamp(220px, 23vw, 330px); }
+.prop--specs { z-index: 1; right: max(-30px, calc(50% - 720px)); top: clamp(40px, 9vh, 90px); width: clamp(180px, 17vw, 250px); transform: rotate(-8deg); }
+.prop--flashlight { z-index: 9; top: clamp(-20px, 1vh, 20px); left: max(-30px, calc(50% - 740px)); width: clamp(150px, 15vw, 230px); }
+.prop--compass { z-index: 9; top: clamp(-30px, -1.4vw, -14px); right: clamp(10px, 3vw, 48px); width: clamp(90px, 9vw, 140px); }
+.prop--magnifier { z-index: 9; right: clamp(40px, 8vw, 130px); bottom: clamp(-150px, -8vw, -80px); width: clamp(100px, 9.5vw, 140px); transform: rotate(-22deg); }
+.prop--walkman { z-index: 1; left: max(-40px, calc(50% - 640px)); bottom: 14%; width: clamp(170px, 15vw, 230px); transform: rotate(-8deg); }
+.board:not(.in) .prop { opacity: 0; translate: 0 16px; }
+.board .prop { transition: opacity 0.8s 1s, translate 0.9s var(--ease-out) 1s; }
 
 /* ── Cassette ─────────────────────────────────────────── */
 .cassette {
@@ -1585,6 +1614,8 @@ h1, h2, h3, p, figure, dl, dd { margin: 0; }
   .board__props { grid-template-columns: 1fr; justify-items: center; gap: 36px; }
   .news--board { justify-self: center; }
   .doodles { display: none; }
+  .prop--specs, .prop--walkman, .prop--flashlight { display: none; }
+  .prop--camera { width: 170px; left: -30px; bottom: -30px; }
   .magnifier { transform: rotate(-12deg) scale(0.62); transform-origin: 0 100%; left: -14px; bottom: -40px; }
 
   .ev--cluster .ev__body,
