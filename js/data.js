@@ -1,128 +1,153 @@
 /*
  * ─────────────────────────────────────────────────────────────
- *  UWCCR — THE FILM · content file
+ *  THE ULRICH FILES · content file
  *  This is the only file you need to edit.
- *  · Replace photos in /photos/<scene>/ (keep the same filenames,
- *    or change the "src" paths below).
- *  · Notes are handwritten-style: keep them SHORT (max ~10 words).
- *  · "alt" describes the photo for screen readers — always fill it.
+ *
+ *  · Each item in `events` becomes:
+ *      – a track on the cassette's tracklist
+ *      – a polaroid + map pin on the investigation board
+ *      – its own "evidence" section further down
+ *  · Add, remove or reorder events freely (4–8 works best).
+ *  · coords: [latitude, longitude] anywhere in Costa Rica
+ *    (Google Maps → right-click a place → copy the numbers).
+ *  · layout: "cluster" | "row" | "bag"  (leave empty to rotate).
+ *  · The FIRST photo of each event is its cover.
+ *  · Notes are handwritten-style: keep them SHORT.
  * ─────────────────────────────────────────────────────────────
  */
-window.FILM = {
-  director: "Ulrich",
+window.FILES = {
+  name: "Ulrich",
   school: "UWC Costa Rica",
-  place: "Santa Ana, Costa Rica",
   years: "2024 — 2026",
-  runtime: "2 min 30 sec",
-  portrait: {
-    src: "photos/cover/portrait.webp",
-    alt: "Portrait of Ulrich holding a vintage camera",
-    w: 900, h: 1100,
-  },
+  caseNo: "UWCCR-2426",
+  portrait: { src: "photos/cover/portrait.webp", w: 900, h: 1100, alt: "Portrait of Ulrich holding a vintage camera" },
 
-  scenes: [
+  /* The "suspect profile" notepad on the board — the 10-second summary */
+  profile: [
+    ["Subject", "Ulrich"],
+    ["Last seen", "UWC Costa Rica"],
+    ["Known for", "Making strangers laugh"],
+    ["Trusted by", "Friends from 30+ countries"],
+    ["Weakness", "Gallo pinto"],
+  ],
+
+  events: [
     {
-      id: "friends",
-      number: "01",
-      title: "Friends",
-      kicker: "the cast",
-      mood: "warm",
-      note: "Strangers in August. Family by December.",
-      layout: "corkboard",
+      id: "arrival",
+      title: "Arrival",
+      date: "Aug 2024",
+      place: "Santa Ana",
+      coords: [9.93, -84.18],
+      headline: "New student arrives with one suitcase, leaves with forty friends",
+      note: "Day one. I didn't know anyone's name.",
+      chalk: ["who is he?", "??"],
       photos: [
-        { src: "photos/friends/01.webp", w: 1000, h: 800, alt: "Two friends sitting on a bench at sunset", caption: "first week" },
-        { src: "photos/friends/02.webp", w: 1000, h: 800, alt: "Friends hugging on a city street", caption: "the airport goodbye" },
-        { src: "photos/friends/03.webp", w: 1000, h: 800, alt: "Paddling a canoe on a lake", caption: "lake day" },
-        { src: "photos/friends/04.webp", w: 1000, h: 800, alt: "Crowd crossing a busy street", caption: "san josé, lost again" },
-        { src: "photos/friends/05.webp", w: 1000, h: 800, alt: "People talking in a café", caption: "sunday crew" },
-        { src: "photos/friends/06.webp", w: 1000, h: 800, alt: "Reading in tall grass", caption: "quiet company" },
-        { src: "photos/friends/07.webp", w: 1000, h: 800, alt: "Friend taking a photo with a film camera", caption: "she shot this one" },
+        { src: "photos/e1/01.webp", w: 1000, h: 800, alt: "Two people on a bench facing the sea", caption: "first sunset" },
+        { src: "photos/e1/02.webp", w: 1000, h: 800, alt: "Busy street full of people", caption: "lost in San José" },
+        { src: "photos/e1/03.webp", w: 900, h: 900, alt: "Green door in a yellow wall", caption: "room 214" },
+        { src: "photos/e1/04.webp", w: 1400, h: 933, alt: "Silhouette over a misty city", caption: "the view that week" },
+        { src: "photos/e1/05.webp", w: 1000, h: 750, alt: "Railway tracks crossing a bridge", caption: "no way back" },
       ],
     },
     {
-      id: "humor",
-      number: "02",
-      title: "Humor",
-      kicker: "outtakes",
-      mood: "playful",
-      note: "Not for theatrical release.",
-      layout: "filmstrip",
+      id: "rainy-season",
+      title: "Rainy Season",
+      date: "Oct 2024",
+      place: "Manuel Antonio",
+      coords: [9.39, -84.14],
+      headline: "Local rain refuses to stop; students build a fort of blankets",
+      note: "Forty days of rain. Zero dry socks.",
+      chalk: ["suspicious", "ha!"],
       photos: [
-        { src: "photos/humor/01.webp", w: 1000, h: 750, alt: "Pug wrapped in a blanket in a forest", caption: "me at 6am assembly" },
-        { src: "photos/humor/02.webp", w: 1000, h: 750, alt: "Walruses piled on a beach", caption: "dorm, movie night" },
-        { src: "photos/humor/03.webp", w: 1000, h: 750, alt: "Black puppy looking up", caption: "after 'one more episode'" },
-        { src: "photos/humor/04.webp", w: 1000, h: 750, alt: "Pug wrapped in a blanket on a bed", caption: "rainy season, day 41" },
-        { src: "photos/humor/05.webp", w: 1000, h: 750, alt: "Brown bear staring at the camera", caption: "when the wifi drops" },
-        { src: "photos/humor/06.webp", w: 1000, h: 750, alt: "Coyote with a suspicious look", caption: "who ate my gallo pinto?" },
+        { src: "photos/e2/01.webp", w: 1000, h: 750, alt: "Pug wrapped in a blanket in a forest", caption: "me, 6am assembly" },
+        { src: "photos/e2/02.webp", w: 1000, h: 750, alt: "Pug wrapped in a blanket on a bed", caption: "day 41" },
+        { src: "photos/e2/03.webp", w: 1000, h: 750, alt: "Brown bear staring at the camera", caption: "when the wifi drops" },
+        { src: "photos/e2/04.webp", w: 1000, h: 750, alt: "Black puppy looking up", caption: "'one more episode'" },
+        { src: "photos/e2/05.webp", w: 900, h: 900, alt: "Tea being poured into a cup", caption: "survival kit" },
       ],
     },
     {
-      id: "culture",
-      number: "03",
-      title: "Culture",
-      kicker: "contact sheet",
-      mood: "curious",
+      id: "culture-night",
+      title: "Culture Night",
+      date: "Nov 2024",
+      place: "Puerto Viejo",
+      coords: [9.65, -82.75],
+      headline: "Eighteen countries, one stage, zero rehearsals: crowd demands encore",
       note: "Every table had a different grandmother's recipe.",
-      layout: "contactsheet",
-      selects: [0, 3, 5],
+      chalk: ["!!!", "encore"],
       photos: [
-        { src: "photos/culture/01.webp", w: 900, h: 900, alt: "Coffee on a wooden table", caption: "café chorreado" },
-        { src: "photos/culture/02.webp", w: 900, h: 900, alt: "Fresh vegetables on a cutting board", caption: "cooking night" },
-        { src: "photos/culture/03.webp", w: 900, h: 900, alt: "Colourful clothes on a rack", caption: "culture day fits" },
-        { src: "photos/culture/04.webp", w: 900, h: 900, alt: "Musician on stage under a spotlight", caption: "the show" },
-        { src: "photos/culture/05.webp", w: 900, h: 900, alt: "Bowl of food from above", caption: "someone's home" },
-        { src: "photos/culture/06.webp", w: 900, h: 900, alt: "Fresh strawberries", caption: "feria on saturday" },
-        { src: "photos/culture/07.webp", w: 900, h: 900, alt: "Tea being poured", caption: "chai lesson" },
-        { src: "photos/culture/08.webp", w: 900, h: 900, alt: "Green door on a yellow wall", caption: "open doors" },
+        { src: "photos/e3/01.webp", w: 900, h: 900, alt: "Musician on stage under a spotlight", caption: "the show" },
+        { src: "photos/e3/02.webp", w: 900, h: 900, alt: "Colourful clothes on a rack", caption: "costume chaos" },
+        { src: "photos/e3/03.webp", w: 900, h: 900, alt: "Coffee on a wooden table", caption: "café chorreado" },
+        { src: "photos/e3/04.webp", w: 900, h: 900, alt: "Bowl of food from above", caption: "someone's home" },
+        { src: "photos/e3/05.webp", w: 900, h: 900, alt: "Vegetables on a cutting board", caption: "cooking night" },
       ],
     },
     {
-      id: "vulnerable",
-      number: "04",
-      title: "Vulnerable",
-      kicker: "the quiet reel",
-      mood: "quiet",
+      id: "project-week",
+      title: "Project Week",
+      date: "Mar 2025",
+      place: "Monteverde",
+      coords: [10.3, -84.82],
+      headline: "Group gets lost in cloud forest, finds the way — and each other",
+      note: "The map was wrong. We weren't.",
+      chalk: ["the team", "→ leader?"],
+      photos: [
+        { src: "photos/e4/01.webp", w: 1000, h: 800, alt: "Paddling a canoe on a lake", caption: "plan B" },
+        { src: "photos/e4/02.webp", w: 1000, h: 750, alt: "Hiker in a misty valley", caption: "cloud forest" },
+        { src: "photos/e4/03.webp", w: 1000, h: 750, alt: "Vintage film camera", caption: "documenting it all" },
+        { src: "photos/e4/04.webp", w: 1000, h: 800, alt: "Reading in tall grass", caption: "the break" },
+        { src: "photos/e4/05.webp", w: 1000, h: 800, alt: "Friend taking a photo", caption: "she shot this one" },
+      ],
+    },
+    {
+      id: "the-quiet-month",
+      title: "The Quiet Month",
+      date: "May 2025",
+      place: "Santa Ana",
+      coords: [10.02, -84.32],
+      headline: "Student learns that asking for help is also a skill",
       note: "The parts I didn't post.",
-      layout: "projector",
+      chalk: ["?", "important"],
       photos: [
-        { src: "photos/vulnerable/01.webp", w: 1400, h: 933, alt: "Person in a hood facing the sea", caption: "Month two. Homesickness was louder than the music." },
-        { src: "photos/vulnerable/02.webp", w: 1400, h: 933, alt: "Silhouette looking over a misty city", caption: "I learned to ask for help. Out loud." },
-        { src: "photos/vulnerable/03.webp", w: 1400, h: 933, alt: "Person walking toward a sunset", caption: "Someone listened. Then I learned to listen back." },
-        { src: "photos/vulnerable/04.webp", w: 1400, h: 933, alt: "Tea cup and flowers on a bed", caption: "Some days, rest was the bravest thing." },
-        { src: "photos/vulnerable/05.webp", w: 1400, h: 933, alt: "Person under the Milky Way", caption: "Small, but not alone." },
+        { src: "photos/e5/01.webp", w: 1400, h: 933, alt: "Person in a hood facing the sea", caption: "homesick" },
+        { src: "photos/e5/02.webp", w: 1400, h: 933, alt: "Person walking toward a sunset", caption: "someone listened" },
+        { src: "photos/e5/03.webp", w: 1400, h: 933, alt: "Tea cup and flowers on a bed", caption: "rest is brave" },
+        { src: "photos/e5/04.webp", w: 1000, h: 750, alt: "Laptop and notebook on a desk", caption: "back to work" },
       ],
     },
     {
-      id: "serious",
-      number: "05",
-      title: "Serious",
-      kicker: "director's notes",
-      mood: "focused",
-      note: "The work behind the laughter.",
-      layout: "slate",
+      id: "graduation",
+      title: "Graduation",
+      date: "May 2026",
+      place: "Santa Ana",
+      coords: [9.86, -84.1],
+      headline: "Case closed? Witnesses say the story is just beginning",
+      note: "Strangers in August. Family by May.",
+      chalk: ["the end?", "♥"],
       photos: [
-        { src: "photos/serious/01.webp", w: 1000, h: 750, alt: "Vintage typewriter keys", caption: "Wrote the proposal for the student council." },
-        { src: "photos/serious/02.webp", w: 1000, h: 750, alt: "Laptop and notebook on a desk", caption: "IB finals. 2am. Still going." },
-        { src: "photos/serious/03.webp", w: 1000, h: 750, alt: "Vintage film camera", caption: "Documented our community project." },
-        { src: "photos/serious/04.webp", w: 1000, h: 750, alt: "Railway tracks crossing a bridge", caption: "Led the trip. Everyone got home." },
-        { src: "photos/serious/05.webp", w: 1000, h: 750, alt: "Hiker standing in a misty valley", caption: "What's next? I'm ready." },
+        { src: "photos/e6/01.webp", w: 1000, h: 800, alt: "Two friends hugging on a street", caption: "the goodbye" },
+        { src: "photos/e6/02.webp", w: 1000, h: 800, alt: "Friends in a café", caption: "last sunday crew" },
+        { src: "photos/e6/03.webp", w: 1400, h: 933, alt: "Person under the Milky Way", caption: "what's next" },
+        { src: "photos/e6/04.webp", w: 1000, h: 750, alt: "Walruses piled on a beach", caption: "the last movie night" },
+        { src: "photos/e6/05.webp", w: 900, h: 900, alt: "Fresh strawberries", caption: "one last feria" },
       ],
     },
   ],
 
-  /* End credits — first names + countries. Ask permission first. */
+  verdict: "Verdict: worth getting to know.",
+
+  /* Liner notes (back of the cassette case) — ask permission for names */
   cast: [
     ["Amara", "Kenya"], ["Mateo", "Argentina"], ["Lina", "Norway"],
     ["Yusuf", "Jordan"], ["Sofía", "Costa Rica"], ["Kenji", "Japan"],
     ["Priya", "India"], ["Elif", "Türkiye"], ["Tomás", "Chile"],
     ["Nia", "Ghana"], ["Lukas", "Germany"], ["Mei", "China"],
   ],
-  crew: [
-    ["Directed by", "Ulrich"],
-    ["Filmed on location", "UWC Costa Rica"],
+  credits: [
+    ["Recorded live at", "UWC Costa Rica"],
+    ["Produced by", "Ulrich"],
     ["Catering", "Gallo pinto, every single morning"],
-    ["Soundtrack", "Rain on a tin roof"],
     ["Special thanks", "Everyone who stayed up to talk"],
   ],
-  disclaimer: "No pugs were harmed in the making of this film.",
 };

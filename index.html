@@ -3,158 +3,193 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>UWCCR — The Film</title>
-  <meta name="description" content="Two years at UWC Costa Rica, told in five scenes: friends, humor, culture, vulnerability and the serious stuff." />
-  <meta name="theme-color" content="#141516" />
-  <meta property="og:title" content="UWCCR — The Film" />
-  <meta property="og:description" content="Two years at UWC Costa Rica, in five scenes." />
+  <title>The Ulrich Files</title>
+  <meta name="description" content="Two years at UWC Costa Rica, investigated one event at a time. Press play to know me more." />
+  <meta name="theme-color" content="#121212" />
+  <meta property="og:title" content="The Ulrich Files — UWC Costa Rica" />
+  <meta property="og:description" content="Two years at UWC Costa Rica, one event at a time." />
   <meta property="og:image" content="photos/cover/portrait.webp" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='22' width='56' height='38' rx='4' fill='%23ece8df'/%3E%3Cg transform='rotate(-14 6 20)'%3E%3Crect x='4' y='8' width='56' height='12' rx='2' fill='%23111'/%3E%3Cpath d='M12 8h8l-6 12H6zM28 8h8l-6 12h-8zM44 8h8l-6 12h-8z' fill='%23e0262b'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='2' y='12' width='60' height='40' rx='6' fill='%23e9ecf2'/%3E%3Crect x='12' y='24' width='40' height='14' rx='7' fill='%231d2456'/%3E%3Ccircle cx='21' cy='31' r='5' fill='%23cfd4de'/%3E%3Ccircle cx='43' cy='31' r='5' fill='%23cfd4de'/%3E%3Crect x='16' y='44' width='32' height='4' fill='%23c8102e'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Serif+Display:ital@1&family=Gochi+Hand&family=Special+Elite&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Fredoka:wght@500;600;700&family=Gochi+Hand&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Special+Elite&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&text=TheUWCCRimsDalyNw&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="preload" as="image" href="photos/cover/portrait.webp" />
 </head>
 <body>
-  <a class="skip" href="#shotlist">Skip to the shot list</a>
+  <a class="skip" href="#board">Skip to the investigation board</a>
 
-  <!-- Shared SVG defs: chalk-arrow heads, rough filter -->
   <svg class="defs" aria-hidden="true" focusable="false" width="0" height="0">
     <defs>
       <filter id="rough">
-        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="n" />
-        <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" />
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="n" />
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" />
+      </filter>
+      <filter id="chalky">
+        <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="7" result="n" />
+        <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 -1.6 1.35" result="m" />
+        <feComposite in="SourceGraphic" in2="m" operator="in" result="c" />
+        <feDisplacementMap in="c" in2="n" scale="1.6" />
       </filter>
     </defs>
   </svg>
 
-  <!-- ══════════════ OPENING ══════════════ -->
-  <header class="opening" id="top">
-    <div class="opening__lights" aria-hidden="true"></div>
+  <!-- ══════════════ SIDE A · THE TAPE ══════════════ -->
+  <header class="deck" id="top">
+    <div class="spot spot--deck" aria-hidden="true"></div>
 
-    <p class="chalk chalk--tl" aria-hidden="true">based on a true story</p>
-
-    <div class="opening__stage">
-      <!-- The clapperboard -->
-      <div class="clapper" id="clapper">
-        <div class="clapper__stick clapper__stick--top" aria-hidden="true">
-          <span class="clapper__hinge"></span>
-        </div>
-        <div class="clapper__stick clapper__stick--bottom" aria-hidden="true"></div>
-
-        <div class="clapper__board">
-          <div class="slate-row slate-row--prod">
-            <span class="slate-label">PROD.</span>
-            <span class="tape tape--label"><span data-bind="school">UWC Costa Rica</span></span>
-          </div>
-          <div class="slate-row slate-row--grid">
-            <div class="slate-cell"><span class="slate-label">ROLL</span><span class="marker">01</span></div>
-            <div class="slate-cell"><span class="slate-label">SCENES</span><span class="marker">05</span></div>
-            <div class="slate-cell"><span class="slate-label">TAKE</span><span class="marker">1</span></div>
-          </div>
-
-          <h1 class="title">
-            <span class="title__main">UWC<span class="title__o" aria-hidden="true"><span>CR</span></span><span class="sr-only">CR</span></span>
-            <span class="title__script">the film</span>
-          </h1>
-
-          <div class="slate-row slate-row--meta">
-            <div class="slate-cell"><span class="slate-label">DIRECTOR</span><span class="marker marker--sm" data-bind="director">Ulrich</span></div>
-            <div class="slate-cell"><span class="slate-label">DATE</span><span class="marker marker--sm" data-bind="years">2024 — 2026</span></div>
-            <div class="slate-cell"><span class="slate-label">RUNTIME</span><span class="marker marker--sm" data-bind="runtime">2 min 30 sec</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Polaroid portrait with binder clip -->
-      <figure class="polaroid polaroid--hero" data-reveal>
-        <span class="binder" aria-hidden="true"></span>
-        <img id="portrait" src="photos/cover/portrait.webp" width="900" height="1100" alt="" fetchpriority="high" />
-        <figcaption class="signature" data-bind="director">Ulrich</figcaption>
-      </figure>
-
-      <!-- Lanyard badge -->
-      <div class="badge" aria-hidden="true">
-        <span class="badge__strap"></span>
-        <span class="badge__clip"></span>
-        <div class="badge__card">
-          <span class="badge__org">UWC · COSTA RICA</span>
-          <span class="badge__role">STUDENT</span>
-          <span class="badge__name" data-bind="director">Ulrich</span>
-          <span class="badge__years" data-bind="years">2024 — 2026</span>
-          <span class="badge__bar"></span>
-        </div>
-      </div>
-
-      <!-- Circular sticker -->
-      <svg class="sticker sticker--puravida" viewBox="0 0 120 120" aria-hidden="true">
-        <defs><path id="circ" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" /></defs>
-        <circle cx="60" cy="60" r="58" fill="#e0262b" />
-        <circle cx="60" cy="60" r="31" fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 4" />
-        <text font-family="Archivo Black" font-size="13" letter-spacing="2.6" fill="#fff"><textPath href="#circ">PURA VIDA · PURA VIDA · PURA VIDA ·</textPath></text>
-        <text x="60" y="67" text-anchor="middle" font-family="DM Serif Display" font-style="italic" font-size="22" fill="#fff">CR</text>
-      </svg>
+    <div class="deck__stamp" aria-hidden="true">
+      <span>CONFIDENTIAL</span>
+      <small>case #<b data-bind="caseNo">UWCCR-2426</b></small>
     </div>
 
-    <div class="chalk-note chalk-note--hero" aria-hidden="true">
-      <span class="chalk">a story in five scenes</span>
-      <svg viewBox="0 0 90 90" class="arrow"><path d="M10 8 C 60 10, 78 38, 52 78 M52 78 l-3 -16 M52 78 l14 -9" /></svg>
+    <div class="deck__stage">
+      <!-- J-card (tracklist) -->
+      <aside class="jcard" aria-labelledby="tracks-title">
+        <div class="jcard__spine" aria-hidden="true"><span data-bind="name">Ulrich</span><span>·</span><span data-bind="years">2024 — 2026</span></div>
+        <div class="jcard__body">
+          <p class="jcard__brand">UWC<b>CR</b> <span>TYPE II · CHROME</span></p>
+          <h2 id="tracks-title" class="jcard__title">Tracklist</h2>
+          <div class="jcard__sides" id="tracks"><!-- rendered --></div>
+          <p class="jcard__foot">In a hurry? Each track takes ~20 sec.</p>
+        </div>
+      </aside>
+
+      <!-- The cassette -->
+      <div class="cassette" id="cassette" role="img" aria-label="Cassette tape labelled UWCCR, Ulrich, 2024 to 2026 — play it to know me more">
+        <div class="cassette__shell">
+          <span class="screw screw--tl"></span><span class="screw screw--tr"></span>
+          <span class="screw screw--bl"></span><span class="screw screw--br"></span>
+
+          <div class="label">
+            <div class="label__holo" aria-hidden="true"></div>
+            <div class="label__top">
+              <div>
+                <p class="label__title">UWC<span>CR</span></p>
+                <p class="label__sub">two years · one case file</p>
+              </div>
+              <p class="label__year"><span>20</span><sup>24</sup><small>— 26</small></p>
+            </div>
+
+            <div class="window">
+              <div class="reel reel--l"><span class="reel__tape"></span><span class="reel__hub"><i></i></span></div>
+              <div class="window__mid">
+                <span class="window__ticks"></span>
+                <span class="window__nums"><i>100</i><i>50</i><i>0</i></span>
+              </div>
+              <div class="reel reel--r"><span class="reel__tape"></span><span class="reel__hub"><i></i></span></div>
+            </div>
+
+            <div class="label__name">
+              <span class="label__x">✕</span>
+              <span class="label__hand" data-bind="name">Ulrich</span>
+            </div>
+            <span class="sticker-play">PLAY IT TO<br />KNOW ME MORE</span>
+          </div>
+
+          <div class="cassette__bottom">
+            <span class="hole"></span><span class="screw screw--c"></span><span class="hole"></span>
+          </div>
+          <span class="cassette__shine" aria-hidden="true"></span>
+        </div>
+      </div>
     </div>
 
-    <a class="play" href="#shotlist">
-      <span class="play__dot" aria-hidden="true"></span>
-      Press play
-    </a>
+    <nav class="transport" aria-label="Tape controls">
+      <a class="tbtn" href="#credits" aria-label="Skip to the end">⏭</a>
+      <a class="tbtn tbtn--play" href="#board" id="play"><span class="tbtn__tri" aria-hidden="true"></span>Press play</a>
+      <span class="transport__hint">open the case file</span>
+    </nav>
   </header>
 
-  <main id="reel">
-    <!-- ══════════════ SHOT LIST ══════════════ -->
-    <section class="shotlist" id="shotlist" aria-labelledby="shotlist-title">
-      <div class="clipboard">
-        <span class="clipboard__clip" aria-hidden="true"></span>
-        <div class="clipboard__paper">
-          <div class="paper-head">
-            <h2 id="shotlist-title" class="typewriter">SHOT LIST</h2>
-            <span class="typewriter paper-head__meta">PROD. <span data-bind="school">UWC Costa Rica</span> · DIR. <span data-bind="director">Ulrich</span></span>
+  <main>
+    <!-- ══════════════ THE BOARD ══════════════ -->
+    <section class="board-sec" id="board" aria-labelledby="board-title">
+      <div class="spot spot--board" aria-hidden="true"></div>
+      <div class="frame">
+        <div class="board" id="boardEl">
+          <svg class="strings" aria-hidden="true"><g></g></svg>
+
+          <header class="board__head">
+            <h2 id="board-title" class="chalk-title">The <span data-bind="name">Ulrich</span> Files</h2>
+            <p class="chalk board__sub">two years · <span id="evCount">6</span> pieces of evidence · 1 suspect</p>
+          </header>
+
+          <div class="board__grid" id="boardGrid">
+            <figure class="map" id="map">
+              <div class="map__paper">
+                <div class="map__area">
+                  <svg class="map__svg" id="mapSvg" viewBox="0 0 360 340" aria-hidden="true"></svg>
+                  <div class="map__pins" id="mapPins"></div>
+                </div>
+              </div>
+              <figcaption class="sr-only">Hand-drawn map of Costa Rica with the place of each event marked.</figcaption>
+            </figure>
+            <!-- event polaroids rendered here -->
           </div>
-          <ol class="shots" id="shots"><!-- rendered by main.js --></ol>
-          <p class="pen pen--foot">← in a hurry? each scene takes ~30 seconds</p>
+
+          <div class="board__props">
+            <div class="notepad" data-pin>
+              <span class="pin pin--green" aria-hidden="true"></span>
+              <p class="notepad__h">Suspect profile</p>
+              <dl id="profile"></dl>
+            </div>
+
+            <div class="doodles" aria-hidden="true">
+              <span class="chalk doodle doodle--secret">TOP SECRET</span>
+              <span class="chalk doodle doodle--q">???</span>
+              <svg class="doodle-thumb" viewBox="0 0 60 60"><path d="M18 52 V28 M18 28 h-8 v24 h8 M18 30 l10 -18 c4 -6 10 -2 8 4 l-3 10 h14 c5 0 7 5 4 8 c3 3 1 7 -2 8 c2 3 0 7 -4 7 c1 4 -2 6 -6 6 H22" /></svg>
+            </div>
+
+            <article class="news news--board" data-pin>
+              <span class="pin pin--red" aria-hidden="true"></span>
+              <header class="news__mast"><p class="news__name">The UWCCR Times</p><p class="news__line"><span>Extra edition</span><span data-bind="years">2024 — 2026</span><span>1 colón</span></p></header>
+              <h3 class="news__head">Student spends two years at UWC, refuses to be summarized in 650 words</h3>
+              <div class="news__cols" aria-hidden="true"><i></i><i></i><i></i></div>
+            </article>
+          </div>
+
+          <div class="magnifier" aria-hidden="true"><span class="magnifier__lens"></span><span class="magnifier__handle"></span></div>
         </div>
+        <div class="tray" aria-hidden="true"><i></i><i></i><i class="tray__eraser"></i></div>
       </div>
     </section>
 
-    <!-- Scenes are rendered here by main.js from js/data.js -->
-    <div id="scenes"></div>
+    <!-- ══════════════ EVIDENCE (one per event) ══════════════ -->
+    <div class="case" id="case"></div>
 
-    <!-- ══════════════ END CREDITS ══════════════ -->
-    <section class="credits" id="credits" aria-labelledby="credits-title">
-      <div class="credits__roll">
-        <p class="credits__fin" id="credits-title">Fin.</p>
-        <p class="credits__a">a film by</p>
-        <p class="credits__name" data-bind="director">Ulrich</p>
-
-        <h3 class="credits__h">Starring</h3>
-        <ul class="credits__cast" id="cast"></ul>
-
-        <dl class="credits__crew" id="crew"></dl>
-
-        <p class="credits__small" data-bind="place">Santa Ana, Costa Rica</p>
-        <p class="credits__small credits__disclaimer" data-bind="disclaimer"></p>
-
-        <a class="replay" href="#top" id="replay">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" /></svg>
-          Watch again
-        </a>
+    <!-- ══════════════ CASE CLOSED ══════════════ -->
+    <section class="closed" id="credits" aria-labelledby="closed-title">
+      <div class="spot spot--closed" aria-hidden="true"></div>
+      <div class="folder">
+        <span class="folder__tab">CASE #<b data-bind="caseNo">UWCCR-2426</b></span>
+        <div class="folder__page">
+          <h2 id="closed-title" class="typed">FINAL REPORT</h2>
+          <dl class="report" id="report"></dl>
+          <p class="verdict" data-bind="verdict">Verdict: worth getting to know.</p>
+          <span class="bigstamp" aria-hidden="true">CASE CLOSED</span>
+        </div>
       </div>
+
+      <div class="liner">
+        <div class="liner__head">
+          <span>SIDE B · LINER NOTES</span><span data-bind="years">2024 — 2026</span>
+        </div>
+        <h3 class="liner__h">Featuring</h3>
+        <ul class="liner__cast" id="cast"></ul>
+        <dl class="liner__credits" id="creditsList"></dl>
+      </div>
+
+      <a class="tbtn tbtn--rewind" href="#top" id="rewind"><span aria-hidden="true">⏪</span> Rewind</a>
     </section>
   </main>
 
-  <!-- Recording HUD -->
+  <!-- Mini cassette HUD -->
   <div class="hud" aria-hidden="true">
-    <span class="hud__rec"><i></i>REC</span>
-    <span class="hud__tc" id="tc">00:00:00:00</span>
-    <span class="hud__scene" id="hud-scene">OPENING</span>
+    <span class="hud__tape"><i class="hud__reel"></i><i class="hud__reel"></i></span>
+    <span class="hud__side" id="hudSide">SIDE A</span>
+    <span class="hud__count" id="hudCount">000</span>
+    <span class="hud__label" id="hudLabel">INTRO</span>
   </div>
 
   <!-- Lightbox -->
@@ -162,7 +197,7 @@
     <figure class="lightbox__frame">
       <img id="lb-img" src="" alt="" />
       <figcaption>
-        <span class="lightbox__count typewriter" id="lb-count"></span>
+        <span class="lightbox__count" id="lb-count"></span>
         <span class="lightbox__cap" id="lb-cap"></span>
       </figcaption>
     </figure>
@@ -172,7 +207,6 @@
   </dialog>
 
   <div class="grain" aria-hidden="true"></div>
-  <div class="vignette" aria-hidden="true"></div>
 
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>

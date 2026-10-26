@@ -1,7 +1,8 @@
-# UWCCR — The Film 🎬
+# The Ulrich Files 🕵️📼
 
-Dos años en UWC Costa Rica contados como una película en cinco escenas:
-**Friends · Humor · Culture · Vulnerable · Serious**, con créditos finales al cierre.
+Dos años en UWC Costa Rica contados como un **caso de detective**: un cassette holográfico
+(*"play it to know me more"*) abre un tablero de investigación en pizarra verde, con un mapa de
+Costa Rica, polaroids e hilo rojo. Cada **evento** es una pieza de evidencia.
 
 Es un sitio estático: HTML, CSS y JS sin dependencias ni paso de build.
 
@@ -12,52 +13,53 @@ python3 -m http.server 8000
 # abre http://localhost:8000
 ```
 
-## Cómo poner TUS fotos y textos
+## Cómo poner TUS eventos, fotos y textos
 
 Todo el contenido vive en **un solo archivo: `js/data.js`**.
 
-1. **Fotos:** reemplaza las imágenes en `photos/<escena>/` con las tuyas, usando los mismos nombres (`01.webp`, `02.webp`…). También puedes cambiar las rutas `src` en `data.js`.
-   - Formato recomendado: `.webp` o `.jpg`, con un lado largo de 1000 a 1400 px y menos de 300 KB por foto.
-   - Si cambias la proporción de una foto, actualiza `w` y `h` en `data.js` para que no salte el diseño al cargar.
-2. **Notas a mano (`caption`):** cortas, de 10 palabras como máximo. Son tu voz, así que escríbelas tú.
-3. **`alt`:** describe cada foto en una frase. Es para lectores de pantalla y también suma en accesibilidad.
-4. **Créditos (`cast`):** pon solo el nombre de pila y el país, y **pide permiso** a cada persona.
-5. **Escena 03 (Culture):** `selects: [0, 3, 5]` indica qué fotos llevan el círculo rojo (se cuentan desde 0).
+Cada objeto dentro de `events` genera automáticamente:
+1. una canción en el **tracklist** del cassette (Side A / Side B),
+2. una **polaroid y un pin en el mapa** del tablero,
+3. su propia sección de **evidencia**, con un recorte de periódico, fotos, notas en tiza e hilo rojo.
 
-> ⚠️ Todos los textos y fotos actuales son **de relleno**. Antes de mandar el link, cambia cada `caption`,
-> sobre todo en *Serious* y *Vulnerable*: esos textos tienen que ser verdad y ser tuyos.
+```js
+{
+  id: "arrival",               // sin espacios; se usa en el link (#ev-arrival)
+  title: "Arrival",
+  date: "Aug 2024",
+  place: "Santa Ana",
+  coords: [9.93, -84.18],      // latitud, longitud (Google Maps → clic derecho → copiar)
+  headline: "Titular del periódico",
+  note: "Una frase tuya, corta.",
+  chalk: ["who is he?", "??"], // hasta 2 notas en tiza
+  layout: "",                  // "cluster" | "row" | "bag" (vacío = se alternan)
+  photos: [ { src, w, h, alt, caption }, ... ]   // la PRIMERA foto es la portada
+}
+```
+
+- **Fotos:** guárdalas en `photos/e1/`, `photos/e2/`… (o en la carpeta que quieras) y actualiza `src`, `w` y `h`.
+  El formato recomendado es `.webp` o `.jpg`, con un lado largo de 1000 a 1400 px.
+- **Funcionan mejor entre 4 y 8 eventos**, con 4 o 5 fotos cada uno.
+- **`profile`:** es el "Suspect profile" del tablero, el resumen de 10 segundos para el officer.
+- **`cast`:** solo el nombre de pila y el país, y **pide permiso** a cada persona.
+
+> ⚠️ Los eventos, titulares, notas y fotos actuales son **de relleno**. Cámbialos por tus eventos reales.
 
 ## Publicarlo gratis
 
-**Opción A: Vercel (recomendada)**
-1. Entra a vercel.com → *Add New Project* → importa este repo.
-2. *Framework preset:* **Other**, sin build command. Haz clic en Deploy.
-3. Obtienes un link tipo `uwcstory.vercel.app`.
-
-**Opción B: GitHub Pages**
-*Settings → Pages → Deploy from branch → `main` / root.*
+**Vercel:** vercel.com → *Add New Project* → importa este repo → *Framework preset:* **Other** → Deploy.
+**GitHub Pages:** *Settings → Pages → Deploy from branch → `main` / root.*
 
 ## En la Common App
 
-- Pega el link en **Additional Information** o en la descripción de una actividad relacionada.
-- Una línea basta: *"A 2-minute photo film about my two years at UWC Costa Rica: [link]"*.
-- Revisa en el teléfono que cargue rápido antes de enviarlo.
+Pega el link en **Additional Information**:
+*"The Ulrich Files — a 2-minute photo case file about my two years at UWC Costa Rica: [link]"*.
 
-## Estructura
+## Detalles
 
-```
-index.html        apertura, shot list, créditos
-css/style.css     todo el diseño (tokens de color arriba)
-js/data.js        ← tu contenido
-js/main.js        render + interacciones (scroll, visor de fotos, HUD)
-photos/           imágenes por escena
-```
-
-## Detalles de diseño
-
-- La apertura es una claqueta animada; luego vienen un shot list para quien lee con prisa y las cinco escenas, cada una con un formato propio:
-  tablero kraft con hilo rojo, tira de película horizontal, hoja de contactos, proyector y una claqueta grande.
-- Respeta `prefers-reduced-motion`: si el sistema pide menos movimiento, se desactivan las animaciones.
+- Los carretes del cassette giran con el scroll y la cinta pasa de un carrete al otro. Abajo a la izquierda hay un mini cassette con contador.
+- El cassette se inclina y la etiqueta holográfica cambia de brillo al mover el mouse.
 - El visor de fotos funciona con teclado (← → Esc) y con deslizar en el celular.
-- Tipografías de Google Fonts: Archivo Black, DM Serif Display, Gochi Hand y Special Elite.
+- Respeta `prefers-reduced-motion`: si el sistema pide menos movimiento, se desactivan las animaciones.
+- Tipografías de Google Fonts: Cabin Sketch, Gochi Hand, Fredoka, Playfair Display, Special Elite y UnifrakturMaguntia.
 - Las fotos de relleno vienen de [Lorem Picsum](https://picsum.photos) (Unsplash License).

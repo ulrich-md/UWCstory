@@ -1,372 +1,389 @@
-/* UWCCR — The Film · renderer + interactions (no dependencies) */
+/* THE ULRICH FILES · renderer + interactions (no dependencies) */
 (() => {
-  const F = window.FILM;
+  const D = window.FILES;
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
   const esc = (s = "") =>
     String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const pad = (n, l = 2) => String(n).padStart(l, "0");
+  const E = D.events;
+  const half = Math.ceil(E.length / 2);
+  const sideOf = (i) => (i < half ? "A" : "B");
 
-  /* ── Bind simple text fields ─────────────────────────── */
+  /* ── Simple binds ───────────────────────────────────── */
   $$("[data-bind]").forEach((el) => {
-    const v = F[el.dataset.bind];
+    const v = D[el.dataset.bind];
     if (v != null) el.textContent = v;
   });
-  const portrait = $("#portrait");
-  portrait.src = F.portrait.src;
-  portrait.alt = F.portrait.alt;
+  $("#evCount").textContent = E.length;
 
-  /* ── Lightbox registry: every photo gets a global index ─ */
+  /* ── Lightbox registry ──────────────────────────────── */
   const all = [];
-  const reg = (p, scene) => all.push({ ...p, scene }) - 1;
+  const reg = (p, ev, i) => all.push({ ...p, ev, i }) - 1;
+  const img = (p, cls = "") =>
+    `<img class="${cls}" src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="${esc(p.alt)}" loading="lazy" decoding="async" />`;
+  const zoom = (gi, inner) =>
+    `<button class="zoom" type="button" data-open="${gi}" aria-label="Open photo: ${esc(all[gi].alt)}">${inner}</button>`;
 
-  const img = (p, i, cls = "", eager = false) =>
-    `<img class="${cls}" src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="${esc(p.alt)}" ${eager ? "" : 'loading="lazy"'} decoding="async" />`;
+  /* ── Tracklist (J-card) ─────────────────────────────── */
+  const track = (ev, i) => `
+    <li><a href="#ev-${ev.id}" class="track">
+      <span class="track__n">${pad(i + 1)}</span>
+      <span class="track__t">${esc(ev.title)}</span>
+      <span class="track__d">${esc(ev.date)}</span>
+    </a></li>`;
+  $("#tracks").innerHTML = `
+    <div class="jside"><p class="jside__h">SIDE A</p><ol>${E.slice(0, half).map((e, i) => track(e, i)).join("")}</ol></div>
+    <div class="jside"><p class="jside__h">SIDE B</p><ol start="${half + 1}">${E.slice(half).map((e, i) => track(e, i + half)).join("")}</ol></div>`;
 
-  const open = (gi) =>
-    `<button class="zoom" type="button" data-open="${gi}" aria-label="Open photo: ${esc(p_alt(gi))}">`;
-  const p_alt = (gi) => all[gi].alt;
-
-  /* Hand-drawn chalk arrows (a few variations) */
-  const arrows = [
-    "M8 6 C 40 4, 58 22, 50 52 M50 52 l-10 -9 M50 52 l9 -12",
-    "M52 6 C 20 10, 6 30, 18 54 M18 54 l-2 -14 M18 54 l13 -5",
-    "M6 40 C 20 10, 46 6, 58 20 M58 20 l-14 -1 M58 20 l-2 -13",
-    "M30 4 C 34 22, 22 34, 30 56 M30 56 l-8 -10 M30 56 l9 -9",
+  /* ── Hand-drawn map of Costa Rica ───────────────────── */
+  // [lon, lat] outline, simplified
+  const CR = [
+    [-85.70, 11.07], [-85.62, 11.2], [-85.2, 11.05], [-84.9, 10.95], [-84.68, 11.08], [-84.35, 10.95], [-84.2, 10.78],
+    [-83.92, 10.72], [-83.7, 10.93], [-83.55, 10.7], [-83.4, 10.4], [-83.2, 10.15], [-83.03, 9.98], [-82.85, 9.8],
+    [-82.6, 9.6], [-82.56, 9.57], [-82.8, 9.48], [-82.93, 9.3], [-82.93, 9.07], [-82.78, 8.85], [-82.85, 8.6],
+    [-82.88, 8.3], [-82.88, 8.05], [-82.95, 8.2], [-83.1, 8.35], [-83.15, 8.55], [-83.2, 8.65], [-83.3, 8.45],
+    [-83.3, 8.38], [-83.5, 8.42], [-83.72, 8.62], [-83.75, 8.75], [-83.65, 8.95], [-83.8, 9.1], [-84.05, 9.3],
+    [-84.2, 9.42], [-84.5, 9.55], [-84.65, 9.7], [-84.8, 9.95], [-84.95, 10.1], [-85.05, 10.15], [-84.9, 9.85],
+    [-84.95, 9.75], [-85.1, 9.6], [-85.3, 9.7], [-85.55, 9.9], [-85.7, 10.1], [-85.82, 10.3], [-85.8, 10.55],
+    [-85.7, 10.78], [-85.9, 10.9], [-85.75, 11.0],
   ];
-  const arrow = (n, cls = "") =>
-    `<svg class="arrow ${cls}" viewBox="0 0 64 60" aria-hidden="true"><path pathLength="1" d="${arrows[n % arrows.length]}"/></svg>`;
+  const proj = ([lat, lon]) => [(lon + 86.05) * 100, (11.35 - lat) * 100];
+  const projLL = ([lon, lat]) => proj([lat, lon]);
 
-  const miniClapper = `
-    <svg class="mini-clapper" viewBox="0 0 64 56" aria-hidden="true">
-      <rect x="4" y="20" width="56" height="34" rx="3" class="mc-board"/>
-      <line x1="4" y1="31" x2="60" y2="31" class="mc-line"/>
-      <line x1="24" y1="31" x2="24" y2="54" class="mc-line"/>
-      <line x1="44" y1="31" x2="44" y2="54" class="mc-line"/>
-      <g class="mc-top"><rect x="4" y="8" width="56" height="11" rx="2" class="mc-stick"/>
-        <path d="M10 8h8l-5 11H5zM26 8h8l-5 11h-8zM42 8h8l-5 11h-8z" class="mc-stripe"/></g>
-    </svg>`;
+  // Catmull-Rom → cubic Bézier, with optional jitter for a sketchy second stroke
+  function smooth(points, closed = true, jitter = 0, seed = 1) {
+    let s = seed;
+    const rnd = () => ((s = (s * 9301 + 49297) % 233280) / 233280 - 0.5) * jitter;
+    const p = points.map(([x, y]) => [x + rnd(), y + rnd()]);
+    const n = p.length;
+    const at = (i) => (closed ? p[(i + n) % n] : p[Math.max(0, Math.min(n - 1, i))]);
+    let d = `M${p[0][0].toFixed(1)},${p[0][1].toFixed(1)}`;
+    const last = closed ? n : n - 1;
+    for (let i = 0; i < last; i++) {
+      const p0 = at(i - 1), p1 = at(i), p2 = at(i + 1), p3 = at(i + 2);
+      const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+      const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+      d += ` C${c1[0].toFixed(1)},${c1[1].toFixed(1)} ${c2[0].toFixed(1)},${c2[1].toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+    }
+    return d + (closed ? "Z" : "");
+  }
 
-  /* ── Shot list ──────────────────────────────────────── */
-  const moods = { warm: "warm", playful: "playful", curious: "curious", quiet: "quiet", focused: "focused" };
-  $("#shots").innerHTML = F.scenes
-    .map(
-      (s) => `
-      <li>
-        <a href="#${s.id}" class="shot">
-          <span class="shot__n typewriter">SC.${s.number}</span>
-          <span class="shot__t">${esc(s.title)}</span>
-          <span class="shot__k pen">${esc(s.kicker)}</span>
-          <span class="shot__m typewriter">${esc(moods[s.mood] || s.mood)} · ${s.photos.length} shots</span>
-          <svg class="shot__check" viewBox="0 0 30 24" aria-hidden="true"><path d="M3 13 l8 7 L27 3"/></svg>
-        </a>
-      </li>`
-    )
+  const outline = CR.map(projLL);
+  const route = E.map((e) => proj(e.coords));
+  const mountains = [[-85.2, 10.75], [-84.95, 10.5], [-84.55, 10.25], [-84.1, 10.05], [-83.8, 9.7], [-83.45, 9.4], [-83.1, 9.15]]
+    .map(projLL)
+    .map(([x, y], i) => `<path class="mtn" d="M${x - 9},${y + 5} l9,-12 l9,12 ${i % 2 ? `M${x + 4},${y + 5} l6,-8 l6,8` : ""}"/>`)
     .join("");
+  $("#mapSvg").innerHTML = `
+    <path class="land land--fill" d="${smooth(outline)}"/>
+    <path class="land" d="${smooth(outline, true, 2.2, 3)}"/>
+    <path class="land land--2" d="${smooth(outline, true, 3.2, 11)}"/>
+    ${mountains}
+    <path class="route" d="${smooth(route, false)}"/>
+    <text class="sea" x="48" y="262">Pacific</text>
+    <text class="sea" x="262" y="40">Caribbean</text>
+    <g class="compass" transform="translate(328 262)">
+      <circle r="18"/><circle r="12" class="c2"/>
+      <path d="M0,-26 L4,0 L0,26 L-4,0Z" class="needle"/><path d="M-26,0 L0,3.5 L26,0 L0,-3.5Z" class="needle needle--h"/>
+      <text y="-30" text-anchor="middle">N</text>
+    </g>
+    <text class="map-title" x="16" y="326">Costa Rica</text>`;
+  const labelled = new Set();
+  $("#mapPins").innerHTML = E.map((e, i) => {
+    const [x, y] = proj(e.coords);
+    // label each place once, so repeated places don't stack labels
+    const label = labelled.has(e.place) ? "" : `<span class="mpin__l">${esc(e.place)}</span>`;
+    labelled.add(e.place);
+    return `<a class="mpin${x > 250 ? " mpin--flip" : ""}" href="#ev-${e.id}" style="left:${(x / 360) * 100}%;top:${(y / 340) * 100}%" data-mpin="${i}" aria-label="${esc(e.title)} — ${esc(e.place)}">
+      <span class="mpin__x">${i + 1}</span>${label}</a>`;
+  }).join("");
 
-  /* ── Scene layouts ──────────────────────────────────── */
-  const layouts = {
-    corkboard(s) {
-      const rot = [-4, 3, -2, 5, -3, 2.5, -5, 4];
-      const dy = [0, 34, -12, 22, 6, -18, 16, -6];
+  /* ── Board polaroids ────────────────────────────────── */
+  const rots = [-6, 5, 3, -4, -3, 6, 4, -5];
+  const dxs = [10, -14, -6, 16, 12, -8, -12, 8];
+  $("#boardGrid").insertAdjacentHTML(
+    "beforeend",
+    E.map((e, i) => {
+      const c = i % 2 ? 3 : 1;
+      const r = Math.floor(i / 2) + 1;
+      const p = e.photos[0];
       return `
-        <div class="cork" data-reveal>
-          <svg class="cork__string" aria-hidden="true"><path/></svg>
-          <ul class="cork__grid">
-            ${s.photos
-              .map((p, i) => {
-                const gi = reg(p, s);
-                return `
-              <li class="polaroid polaroid--cork" style="--r:${rot[i % rot.length]}deg; --dy:${dy[i % dy.length]}px; --i:${i}">
-                <span class="pin" aria-hidden="true"></span>
-                ${open(gi)}${img(p, i)}</button>
-                <span class="pen polaroid__cap">${esc(p.caption)}</span>
-              </li>`;
-              })
-              .join("")}
-          </ul>
-          <span class="tape tape--corner" aria-hidden="true"></span>
-        </div>`;
-    },
+      <a class="bpol" href="#ev-${e.id}" style="--c:${c};--r:${r};--rot:${rots[i % rots.length]}deg;--dx:${dxs[i % dxs.length]}px;--i:${i}" data-bpol="${i}">
+        <span class="pin ${i % 3 === 1 ? "pin--red" : "pin--green"}" aria-hidden="true"></span>
+        ${img(p)}
+        <span class="bpol__cap"><b>#${pad(i + 1)}</b> ${esc(e.title)}</span>
+      </a>`;
+    }).join("")
+  );
+  $("#boardGrid").style.setProperty("--rows", Math.ceil(E.length / 2));
 
-    filmstrip(s) {
-      return `
-        <div class="strip-wrap">
-          <div class="strip-sticky">
-            <div class="stamp" aria-hidden="true">OUTTAKES<small>not for theatrical release</small></div>
-            <div class="strip-track">
-              <ol class="strip" data-reveal>
-                ${s.photos
-                  .map((p, i) => {
-                    const gi = reg(p, s);
-                    const n = 11 + i;
-                    return `
-                  <li class="frame" style="--i:${i}">
-                    <div class="frame__film">
-                      <span class="frame__code" aria-hidden="true">▷ ${n}A</span>
-                      ${open(gi)}${img(p, i)}</button>
-                      <span class="frame__code frame__code--b" aria-hidden="true">${n}</span>
-                    </div>
-                    <p class="chalk frame__cap">${arrow(i + 3, "arrow--up")}${esc(p.caption)}</p>
-                  </li>`;
-                  })
-                  .join("")}
-                <li class="frame frame--end" aria-hidden="true"><div class="frame__film"><span class="chalk">…that's a wrap</span></div></li>
-              </ol>
-            </div>
-          </div>
-        </div>`;
-    },
+  $("#profile").innerHTML = D.profile.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
 
-    contactsheet(s) {
-      const sel = new Set(s.selects || []);
-      return `
-        <div class="folder" data-reveal>
-          <div class="sheet">
-            <p class="sheet__edge typewriter" aria-hidden="true"><span>SAFETY FILM 400</span><span>◀ 14</span><span>PURA VIDA STOCK</span><span>15 ▶</span></p>
-            <ul class="sheet__grid">
-              ${s.photos
-                .map((p, i) => {
-                  const gi = reg(p, s);
-                  const picked = sel.has(i);
-                  return `
-                <li class="cs ${picked ? "cs--pick" : ""}" style="--i:${i}">
-                  ${open(gi)}${img(p, i)}</button>
-                  <span class="cs__n typewriter" aria-hidden="true">${14 + i}${i % 2 ? "A" : ""}</span>
-                  ${
-                    picked
-                      ? `<svg class="cs__circle" viewBox="0 0 120 120" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M60 6 C 100 4, 116 34, 114 62 C 112 96, 84 116, 56 114 C 22 112, 4 88, 6 58 C 8 28, 30 8, 66 9"/></svg>
-                         <span class="pen pen--red cs__note">${esc(p.caption)}</span>`
-                      : ""
-                  }
-                </li>`;
-                })
-                .join("")}
-            </ul>
-            <p class="sheet__edge typewriter" aria-hidden="true"><span>▶ 16</span><span>SAFETY FILM 400</span><span>17</span><span>▶ 18A</span></p>
-          </div>
-          <div class="ticket" aria-hidden="true"><span>ADMIT</span><b>ONE</b><small>culture night · row 3</small></div>
-          <span class="tape tape--folder" aria-hidden="true"></span>
-        </div>`;
-    },
+  /* ── Evidence sections ──────────────────────────────── */
+  const layouts = ["cluster", "row", "bag"];
+  const prots = [-4, 3, -2, 5, -5, 2, 4];
 
-    projector(s) {
-      const items = s.photos.map((p) => ({ p, gi: reg(p, s) }));
-      return `
-        <div class="proj" style="--n:${s.photos.length}">
-          <div class="proj__sticky">
-            <div class="proj__beam" aria-hidden="true"></div>
-            <div class="proj__screen">
-              ${items
-                .map(
-                  ({ p, gi }, i) =>
-                    `<figure class="proj__slide ${i === 0 ? "is-on" : ""}" data-slide="${i}">${open(gi)}${img(p, i)}</button></figure>`
-                )
-                .join("")}
-            </div>
-            <p class="proj__line typewriter" aria-hidden="true"><span>${esc(s.photos[0].caption)}</span></p>
-            <div class="proj__dots" aria-hidden="true">${items.map((_, i) => `<i class="${i === 0 ? "is-on" : ""}"></i>`).join("")}</div>
-            <ul class="sr-only">${s.photos.map((p) => `<li>${esc(p.caption)}</li>`).join("")}</ul>
-          </div>
-        </div>`;
-    },
+  const pol = (p, gi, i, extra = "") => `
+    <figure class="pol ${extra}" style="--rot:${prots[i % prots.length]}deg;--i:${i}">
+      <span class="pin ${i % 2 ? "pin--red" : "pin--green"}" aria-hidden="true"></span>
+      ${zoom(gi, img(p))}
+      <figcaption class="pol__cap">${esc(p.caption)}</figcaption>
+      ${extra.includes("circled") ? `<svg class="chalk-ring" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M100 8 C 170 6, 194 60, 192 104 C 190 160, 140 194, 94 192 C 40 190, 8 150, 10 98 C 12 50, 50 12, 112 12"/></svg>` : ""}
+    </figure>`;
 
-    slate(s) {
-      return `
-        <div class="bigslate" data-reveal>
-          <div class="bigslate__sticks" aria-hidden="true"><span></span><span></span></div>
-          <div class="bigslate__board">
-            <div class="bigslate__head" aria-hidden="true">
-              <div><span class="slate-label">PROD.</span><span class="tape tape--label tape--olive">${esc(s.kicker)}</span></div>
-              <div class="bigslate__cols"><span>ROLL</span><span>SCENE</span><span>TAKE</span></div>
-            </div>
-            <ul class="bigslate__grid">
-              ${s.photos
-                .map((p, i) => {
-                  const gi = reg(p, s);
-                  return `
-                <li class="sframe" style="--i:${i}; --r:${[-3, 2, -1.5, 3, -2][i % 5]}deg">
-                  <span class="tape tape--red" aria-hidden="true"></span>
-                  <div class="sframe__film">${open(gi)}${img(p, i)}</button>
-                    <span class="sframe__code" aria-hidden="true">▷ ${10 + i}A</span></div>
-                  <p class="ink sframe__note">${arrow(i, "arrow--ink arrow--up")}${esc(p.caption)}</p>
-                </li>`;
-                })
-                .join("")}
-            </ul>
-          </div>
-        </div>`;
-    },
-  };
-
-  $("#scenes").innerHTML = F.scenes
-    .map(
-      (s) => `
-    <section class="scene scene--${s.layout}" id="${s.id}" data-label="SC ${s.number} · ${esc(s.title).toUpperCase()}" aria-labelledby="${s.id}-t">
-      <header class="scene__head" data-reveal>
-        ${miniClapper}
-        <p class="scene__num typewriter">SCENE ${s.number} <span>· TAKE 1</span></p>
-        <h2 class="scene__title" id="${s.id}-t">${esc(s.title)}</h2>
-        <p class="scene__kicker">${esc(s.kicker)}</p>
-        <p class="scene__note chalk">${esc(s.note)}</p>
+  const news = (ev, i, withPhoto, gi) => `
+    <article class="news" style="--i:0">
+      <span class="pin pin--red" aria-hidden="true"></span>
+      <header class="news__mast">
+        <p class="news__name">The UWCCR Times</p>
+        <p class="news__line"><span>${esc(ev.date)}</span><span>${esc(ev.place)}</span><span>No. ${pad(i + 1)}</span></p>
       </header>
-      ${layouts[s.layout](s)}
-    </section>`
-    )
+      <h3 class="news__head">${esc(ev.headline)}</h3>
+      ${withPhoto ? `<div class="news__photo">${zoom(gi, img(ev.photos[0]))}</div>` : ""}
+      <p class="news__lede">${esc(ev.note)}</p>
+      <div class="news__cols" aria-hidden="true"><i></i><i></i></div>
+    </article>`;
+
+  const doodles = (ev) =>
+    (ev.chalk || [])
+      .slice(0, 2)
+      .map(
+        (t, k) => `<span class="chalk ev-doodle ev-doodle--${k}" aria-hidden="true">${esc(t)}
+        <svg class="arrow" viewBox="0 0 64 60"><path pathLength="1" d="${k ? "M52 6 C 20 10, 6 30, 18 54 M18 54 l-2 -14 M18 54 l13 -5" : "M8 6 C 40 4, 58 22, 50 52 M50 52 l-10 -9 M50 52 l9 -12"}"/></svg></span>`
+      )
+      .join("");
+
+  $("#case").innerHTML = E.map((ev, i) => {
+    const layout = ev.layout || layouts[i % layouts.length];
+    const gis = ev.photos.map((p, k) => reg(p, ev, k));
+    let body = "";
+    if (layout === "cluster") {
+      body = `
+        <div class="ev__news">${news(ev, i, true, gis[0])}</div>
+        <div class="ev__pics">${ev.photos.slice(1).map((p, k) => pol(p, gis[k + 1], k, k === 1 ? "circled" : "")).join("")}</div>`;
+    } else if (layout === "row") {
+      body = `
+        <div class="ev__pics">${ev.photos.map((p, k) => pol(p, gis[k], k, k === 2 ? "circled" : "")).join("")}</div>
+        <div class="ev__news">${news(ev, i, false)}</div>`;
+    } else {
+      const p0 = ev.photos[0];
+      body = `
+        <div class="ev__bag">
+          <figure class="bag" style="--i:0">
+            <span class="pin pin--green" aria-hidden="true"></span>
+            <div class="bag__strip" aria-hidden="true"></div>
+            <div class="bag__photo">${zoom(gis[0], img(p0))}</div>
+            <div class="bag__label" aria-hidden="true">
+              <p><b>EVIDENCE</b> #${pad(i + 1)}-A</p>
+              <p><span>DATE</span> ${esc(ev.date)}</p>
+              <p><span>LOC.</span> ${esc(ev.place)}</p>
+              <p class="bag__hand">${esc(p0.caption)}</p>
+            </div>
+            <span class="bag__shine" aria-hidden="true"></span>
+          </figure>
+        </div>
+        <div class="ev__side">
+          ${news(ev, i, false)}
+          <div class="ev__pics">${ev.photos.slice(1).map((p, k) => pol(p, gis[k + 1], k, k === 0 ? "circled" : "")).join("")}</div>
+        </div>`;
+    }
+    return `
+    <section class="ev ev--${layout}" id="ev-${ev.id}" data-label="EV ${pad(i + 1)} · ${esc(ev.title).toUpperCase()}" data-side="${sideOf(i)}" aria-labelledby="ev-${ev.id}-t">
+      <header class="ev__head" data-reveal>
+        <p class="ev__track">TRACK ${pad(i + 1)} · SIDE ${sideOf(i)}</p>
+        <p class="ev__no">EVIDENCE #${pad(i + 1)}</p>
+        <h2 class="ev__title chalk-title" id="ev-${ev.id}-t">${esc(ev.title)}</h2>
+        <p class="tag"><span>${esc(ev.date)}</span><span>${esc(ev.place)}</span></p>
+      </header>
+      <div class="ev__body" data-reveal data-strings>
+        <svg class="strings" aria-hidden="true"><g></g></svg>
+        ${body}
+        ${doodles(ev)}
+      </div>
+    </section>`;
+  }).join("");
+
+  /* ── Final report + liner notes ─────────────────────── */
+  $("#report").innerHTML = [
+    ["Subject", D.name],
+    ["Location", D.school],
+    ["Period", D.years],
+    ["Evidence", `${E.length} events, ${all.length} photographs`],
+    ...D.profile.slice(2),
+  ]
+    .map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`)
     .join("");
+  $("#cast").innerHTML = D.cast.map(([n, c]) => `<li><b>${esc(n)}</b> <span>${esc(c)}</span></li>`).join("");
+  $("#creditsList").innerHTML = D.credits.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
 
-  /* ── Credits ────────────────────────────────────────── */
-  $("#cast").innerHTML = F.cast
-    .map(([n, c]) => `<li><span>${esc(n)}</span><i aria-hidden="true"></i><span>${esc(c)}</span></li>`)
-    .join("");
-  $("#crew").innerHTML = F.crew.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
-
-  /* ── Opening clapper snap ───────────────────────────── */
-  const clapper = $("#clapper");
-  const snap = () => {
-    clapper.classList.remove("is-snapped");
-    void clapper.offsetWidth;
-    requestAnimationFrame(() => clapper.classList.add("is-snapped"));
-  };
-  if (reduced) clapper.classList.add("is-snapped", "no-anim");
-  else setTimeout(snap, 450);
-
-  $("#replay").addEventListener("click", (e) => {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
-    if (!reduced) setTimeout(snap, 900);
-  });
+  /* ── Red strings ────────────────────────────────────── */
+  function center(el, box) {
+    const r = el.getBoundingClientRect();
+    return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top];
+  }
+  function draw(container, pairs, animate) {
+    const svg = $(":scope > .strings", container);
+    if (!svg) return;
+    const g = $("g", svg);
+    const box = container.getBoundingClientRect();
+    svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
+    g.innerHTML = pairs
+      .filter(([a, b]) => a && b && a.offsetParent && b.offsetParent)
+      .map(([a, b]) => {
+        const [x1, y1] = center(a, box);
+        const [x2, y2] = center(b, box);
+        const sag = Math.min(70, Math.hypot(x2 - x1, y2 - y1) * 0.12);
+        return `<path pathLength="1" d="M${x1},${y1} Q${(x1 + x2) / 2},${Math.max(y1, y2) + sag} ${x2},${y2}"/>`;
+      })
+      .join("");
+    g.classList.toggle("is-drawn", !animate || reduced);
+    if (animate && !reduced) requestAnimationFrame(() => requestAnimationFrame(() => g.classList.add("is-drawn")));
+  }
+  const boardEl = $("#boardEl");
+  const narrow = matchMedia("(max-width: 860px)");
+  function boardPairs() {
+    const pins = $$(".bpol .pin", boardEl);
+    // stacked layout: chain the polaroids instead of running strings across the whole board
+    if (narrow.matches) return pins.slice(1).map((p, i) => [pins[i], p]);
+    const pairs = pins.map((p, i) => [p, $(`[data-mpin="${i}"] .mpin__x`, boardEl)]);
+    const note = $(".notepad .pin", boardEl);
+    const nw = $(".news--board .pin", boardEl);
+    if (note) pairs.push([note, $(`[data-mpin="0"] .mpin__x`, boardEl)]);
+    if (nw) pairs.push([nw, $(`[data-mpin="${E.length - 1}"] .mpin__x`, boardEl)]);
+    return pairs;
+  }
+  function evPairs(body) {
+    const pins = $$(".pin", body);
+    const pairs = [];
+    for (let k = 1; k < pins.length; k++) pairs.push([pins[k - 1], pins[k]]);
+    return pairs;
+  }
+  const drawBoard = (anim) => draw(boardEl, boardPairs(), anim);
+  const drawEv = (body, anim) => draw(body, evPairs(body), anim);
 
   /* ── Reveal on scroll ───────────────────────────────── */
   const io = new IntersectionObserver(
     (entries) =>
       entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add("in");
-          io.unobserve(e.target);
-          if (e.target.classList.contains("cork")) setTimeout(() => drawString(e.target, true), reduced ? 0 : 1500);
-        }
+        if (!e.isIntersecting) return;
+        const t = e.target;
+        t.classList.add("in");
+        io.unobserve(t);
+        const delay = reduced ? 0 : 1300;
+        if (t === boardEl) setTimeout(() => drawBoard(true), delay);
+        if (t.hasAttribute("data-strings")) setTimeout(() => drawEv(t, true), delay);
       }),
-    { rootMargin: "0px 0px -12% 0px", threshold: 0.08 }
+    { rootMargin: "0px 0px -15% 0px", threshold: 0.06 }
   );
-  $$("[data-reveal]").forEach((el) => io.observe(el));
+  [...$$("[data-reveal]"), boardEl, $(".folder")].forEach((el) => io.observe(el));
 
-  /* ── Red string between pins on corkboards ──────────── */
-  function drawString(cork, animate) {
-    const svg = $(".cork__string", cork);
-    const path = $("path", svg);
-    const box = cork.getBoundingClientRect();
-    const pts = $$(".pin", cork).map((p) => {
-      const r = p.getBoundingClientRect();
-      return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top];
+  /* ── Cassette: tilt + holographic sheen ─────────────── */
+  const cassette = $("#cassette");
+  if (finePointer && !reduced) {
+    const stage = $(".deck");
+    stage.addEventListener("pointermove", (e) => {
+      const r = cassette.getBoundingClientRect();
+      const x = (e.clientX - (r.left + r.width / 2)) / r.width;
+      const y = (e.clientY - (r.top + r.height / 2)) / r.height;
+      cassette.style.setProperty("--ry", `${Math.max(-1, Math.min(1, x)) * 7}deg`);
+      cassette.style.setProperty("--rx", `${Math.max(-1, Math.min(1, y)) * -6}deg`);
+      cassette.style.setProperty("--mx", `${50 + x * 60}%`);
     });
-    svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
-    let d = "";
-    pts.forEach(([x, y], i) => {
-      if (!i) return (d = `M${x},${y}`);
-      const [px, py] = pts[i - 1];
-      const sag = Math.min(60, Math.hypot(x - px, y - py) * 0.18);
-      d += ` Q${(x + px) / 2},${Math.max(y, py) + sag} ${x},${y}`;
-    });
-    path.setAttribute("d", d);
-    const len = path.getTotalLength();
-    path.style.strokeDasharray = len;
-    path.style.strokeDashoffset = animate && !reduced ? len : 0;
-    if (animate && !reduced) requestAnimationFrame(() => requestAnimationFrame(() => (path.style.strokeDashoffset = 0)));
-  }
-
-  /* ── Sticky horizontal film strip (desktop) ─────────── */
-  const strips = $$(".strip-wrap");
-  const wide = matchMedia("(min-width: 860px)");
-  function sizeStrips() {
-    strips.forEach((w) => {
-      const strip = $(".strip", w);
-      if (!wide.matches || reduced) {
-        w.style.height = "";
-        strip.style.transform = "";
-        w.classList.remove("is-pinned");
-        return;
-      }
-      w.classList.add("is-pinned");
-      const dist = Math.max(0, strip.scrollWidth - innerWidth + 80);
-      w.dataset.dist = dist;
-      w.style.height = `${innerHeight + dist}px`;
+    stage.addEventListener("pointerleave", () => {
+      cassette.style.setProperty("--ry", "0deg");
+      cassette.style.setProperty("--rx", "0deg");
+      cassette.style.setProperty("--mx", "50%");
     });
   }
 
-  /* ── Projector (sticky slideshow) ───────────────────── */
-  const projs = $$(".proj");
-
-  /* ── HUD timecode + current scene ───────────────────── */
+  /* ── Scroll: reels, HUD counter, current label ──────── */
+  const reels = $$(".reel", cassette);
   const hud = $(".hud");
-  const tc = $("#tc");
-  const hudScene = $("#hud-scene");
-  const scenes = $$(".scene");
-  const pad = (n) => String(n).padStart(2, "0");
-  const TOTAL = 150; // seconds of "runtime"
-
+  const hudReels = $$(".hud__reel");
+  const hudCount = $("#hudCount");
+  const hudSide = $("#hudSide");
+  const hudLabel = $("#hudLabel");
+  const evs = $$(".ev");
+  let spinBoost = 0;
   let ticking = false;
-  function onScroll() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      ticking = false;
-      const max = document.documentElement.scrollHeight - innerHeight;
-      const t = (Math.min(1, scrollY / Math.max(1, max)) * TOTAL);
-      const f = Math.floor((t % 1) * 24);
-      tc.textContent = `00:${pad(Math.floor(t / 60))}:${pad(Math.floor(t % 60))}:${pad(f)}`;
 
-      let label = scrollY < innerHeight * 0.6 ? "OPENING" : "SHOT LIST";
-      scenes.forEach((s) => {
-        const r = s.getBoundingClientRect();
-        if (r.top < innerHeight * 0.5 && r.bottom > innerHeight * 0.5) label = s.dataset.label;
-      });
-      const cr = $("#credits").getBoundingClientRect();
-      if (cr.top < innerHeight * 0.5) label = "END CREDITS";
-      hudScene.textContent = label;
-      hud.classList.toggle("is-on", scrollY > innerHeight * 0.45);
+  function frame() {
+    ticking = false;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const p = Math.min(1, Math.max(0, scrollY / Math.max(1, max)));
+    // tape moves from the left reel to the right reel as you scroll
+    const l = 1 - p * 0.42;
+    const r = 0.58 + p * 0.42;
+    const base = scrollY * 0.45 + spinBoost;
+    reels[0].style.setProperty("--tape", l);
+    reels[1].style.setProperty("--tape", r);
+    reels[0].style.setProperty("--spin", `${base / l}deg`);
+    reels[1].style.setProperty("--spin", `${base / r}deg`);
+    hudReels.forEach((h, i) => h.style.setProperty("--spin", `${base / (i ? r : l)}deg`));
 
-      strips.forEach((w) => {
-        if (!w.classList.contains("is-pinned")) return;
-        const r = w.getBoundingClientRect();
-        const dist = +w.dataset.dist;
-        const p = Math.min(1, Math.max(0, -r.top / Math.max(1, dist)));
-        $(".strip", w).style.transform = `translate3d(${-p * dist}px,0,0)`;
-      });
-
-      projs.forEach((pr) => {
-        const r = pr.getBoundingClientRect();
-        const slides = $$(".proj__slide", pr);
-        const span = r.height - innerHeight;
-        const p = Math.min(0.999, Math.max(0, -r.top / Math.max(1, span)));
-        const idx = Math.floor(p * slides.length);
-        if (pr.dataset.idx == idx) return;
-        pr.dataset.idx = idx;
-        slides.forEach((s, i) => s.classList.toggle("is-on", i === idx));
-        $$(".proj__dots i", pr).forEach((d, i) => d.classList.toggle("is-on", i === idx));
-        const line = $(".proj__line", pr);
-        const cap = all[+$(".zoom", slides[idx]).dataset.open].caption;
-        line.innerHTML = `<span>${esc(cap)}</span>`;
-      });
+    hudCount.textContent = pad(Math.floor(p * 999), 3);
+    let label = "INTRO";
+    let side = "A";
+    const mid = innerHeight * 0.5;
+    if ($("#board").getBoundingClientRect().top < mid) label = "THE BOARD";
+    evs.forEach((s) => {
+      const rr = s.getBoundingClientRect();
+      if (rr.top < mid && rr.bottom > mid) {
+        label = s.dataset.label;
+        side = s.dataset.side;
+      }
     });
+    if ($("#credits").getBoundingClientRect().top < mid) {
+      label = "CASE CLOSED";
+      side = "B";
+    }
+    hudLabel.textContent = label;
+    hudSide.textContent = `SIDE ${side}`;
+    hud.classList.toggle("is-on", scrollY > innerHeight * 0.4);
   }
+  const onScroll = () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(frame);
+    }
+  };
   addEventListener("scroll", onScroll, { passive: true });
 
-  let rz;
-  function onResize() {
-    sizeStrips();
-    $$(".cork.in").forEach((c) => drawString(c, false));
-    onScroll();
+  // a little extra spin when pressing play / rewind
+  function spin(dir) {
+    if (reduced) return;
+    const start = performance.now();
+    const step = (t) => {
+      const k = Math.min(1, (t - start) / 900);
+      spinBoost += dir * 26 * (1 - k);
+      frame();
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   }
+  $("#play").addEventListener("click", () => spin(1));
+  $("#rewind").addEventListener("click", (e) => {
+    e.preventDefault();
+    spin(-1);
+    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+  });
+
+  let rz;
+  const redraw = () => {
+    if (boardEl.classList.contains("in")) drawBoard(false);
+    $$(".ev__body.in").forEach((b) => drawEv(b, false));
+    frame();
+  };
   addEventListener("resize", () => {
     clearTimeout(rz);
-    rz = setTimeout(onResize, 120);
+    rz = setTimeout(redraw, 150);
   });
-  wide.addEventListener("change", onResize);
-  addEventListener("load", onResize);
-  document.fonts && document.fonts.ready.then(onResize);
-  sizeStrips();
-  onScroll();
+  addEventListener("load", redraw);
+  document.fonts && document.fonts.ready.then(redraw);
+  frame();
 
   /* ── Lightbox ───────────────────────────────────────── */
   const lb = $("#lightbox");
@@ -381,7 +398,8 @@
     lbImg.width = p.w;
     lbImg.height = p.h;
     $("#lb-cap").textContent = p.caption;
-    $("#lb-count").textContent = `SC.${p.scene.number} ${p.scene.title.toUpperCase()} — ${pad(cur + 1)}/${pad(all.length)}`;
+    const n = E.indexOf(p.ev) + 1;
+    $("#lb-count").textContent = `EVIDENCE #${pad(n)}-${String.fromCharCode(65 + p.i)} · ${p.ev.title.toUpperCase()} · ${p.ev.date.toUpperCase()}`;
   }
   document.addEventListener("click", (e) => {
     const b = e.target.closest("[data-open]");
@@ -391,22 +409,18 @@
     lb.showModal();
     document.documentElement.classList.add("lb-open");
   });
-  const close = () => lb.close();
   lb.addEventListener("close", () => {
     document.documentElement.classList.remove("lb-open");
     lastFocus && lastFocus.focus({ preventScroll: true });
   });
-  $("#lb-close").addEventListener("click", close);
+  $("#lb-close").addEventListener("click", () => lb.close());
   $("#lb-prev").addEventListener("click", () => show(cur - 1));
   $("#lb-next").addEventListener("click", () => show(cur + 1));
-  lb.addEventListener("click", (e) => {
-    if (e.target === lb) close();
-  });
+  lb.addEventListener("click", (e) => e.target === lb && lb.close());
   lb.addEventListener("keydown", (e) => {
     if (e.key === "ArrowLeft") show(cur - 1);
     if (e.key === "ArrowRight") show(cur + 1);
   });
-  // swipe on touch
   let sx = null;
   lb.addEventListener("touchstart", (e) => (sx = e.touches[0].clientX), { passive: true });
   lb.addEventListener("touchend", (e) => {
