@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>UWCCR — The Film</title>
+  <meta name="description" content="Two years at UWC Costa Rica, told in five scenes: friends, humor, culture, vulnerability and the serious stuff." />
+  <meta name="theme-color" content="#141516" />
+  <meta property="og:title" content="UWCCR — The Film" />
+  <meta property="og:description" content="Two years at UWC Costa Rica, in five scenes." />
+  <meta property="og:image" content="photos/cover/portrait.webp" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='22' width='56' height='38' rx='4' fill='%23ece8df'/%3E%3Cg transform='rotate(-14 6 20)'%3E%3Crect x='4' y='8' width='56' height='12' rx='2' fill='%23111'/%3E%3Cpath d='M12 8h8l-6 12H6zM28 8h8l-6 12h-8zM44 8h8l-6 12h-8z' fill='%23e0262b'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Serif+Display:ital@1&family=Gochi+Hand&family=Special+Elite&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preload" as="image" href="photos/cover/portrait.webp" />
+</head>
+<body>
+  <a class="skip" href="#shotlist">Skip to the shot list</a>
+
+  <!-- Shared SVG defs: chalk-arrow heads, rough filter -->
+  <svg class="defs" aria-hidden="true" focusable="false" width="0" height="0">
+    <defs>
+      <filter id="rough">
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="n" />
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- ══════════════ OPENING ══════════════ -->
+  <header class="opening" id="top">
+    <div class="opening__lights" aria-hidden="true"></div>
+
+    <p class="chalk chalk--tl" aria-hidden="true">based on a true story</p>
+
+    <div class="opening__stage">
+      <!-- The clapperboard -->
+      <div class="clapper" id="clapper">
+        <div class="clapper__stick clapper__stick--top" aria-hidden="true">
+          <span class="clapper__hinge"></span>
+        </div>
+        <div class="clapper__stick clapper__stick--bottom" aria-hidden="true"></div>
+
+        <div class="clapper__board">
+          <div class="slate-row slate-row--prod">
+            <span class="slate-label">PROD.</span>
+            <span class="tape tape--label"><span data-bind="school">UWC Costa Rica</span></span>
+          </div>
+          <div class="slate-row slate-row--grid">
+            <div class="slate-cell"><span class="slate-label">ROLL</span><span class="marker">01</span></div>
+            <div class="slate-cell"><span class="slate-label">SCENES</span><span class="marker">05</span></div>
+            <div class="slate-cell"><span class="slate-label">TAKE</span><span class="marker">1</span></div>
+          </div>
+
+          <h1 class="title">
+            <span class="title__main">UWC<span class="title__o" aria-hidden="true"><span>CR</span></span><span class="sr-only">CR</span></span>
+            <span class="title__script">the film</span>
+          </h1>
+
+          <div class="slate-row slate-row--meta">
+            <div class="slate-cell"><span class="slate-label">DIRECTOR</span><span class="marker marker--sm" data-bind="director">Ulrich</span></div>
+            <div class="slate-cell"><span class="slate-label">DATE</span><span class="marker marker--sm" data-bind="years">2024 — 2026</span></div>
+            <div class="slate-cell"><span class="slate-label">RUNTIME</span><span class="marker marker--sm" data-bind="runtime">2 min 30 sec</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Polaroid portrait with binder clip -->
+      <figure class="polaroid polaroid--hero" data-reveal>
+        <span class="binder" aria-hidden="true"></span>
+        <img id="portrait" src="photos/cover/portrait.webp" width="900" height="1100" alt="" fetchpriority="high" />
+        <figcaption class="signature" data-bind="director">Ulrich</figcaption>
+      </figure>
+
+      <!-- Lanyard badge -->
+      <div class="badge" aria-hidden="true">
+        <span class="badge__strap"></span>
+        <span class="badge__clip"></span>
+        <div class="badge__card">
+          <span class="badge__org">UWC · COSTA RICA</span>
+          <span class="badge__role">STUDENT</span>
+          <span class="badge__name" data-bind="director">Ulrich</span>
+          <span class="badge__years" data-bind="years">2024 — 2026</span>
+          <span class="badge__bar"></span>
+        </div>
+      </div>
+
+      <!-- Circular sticker -->
+      <svg class="sticker sticker--puravida" viewBox="0 0 120 120" aria-hidden="true">
+        <defs><path id="circ" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" /></defs>
+        <circle cx="60" cy="60" r="58" fill="#e0262b" />
+        <circle cx="60" cy="60" r="31" fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 4" />
+        <text font-family="Archivo Black" font-size="13" letter-spacing="2.6" fill="#fff"><textPath href="#circ">PURA VIDA · PURA VIDA · PURA VIDA ·</textPath></text>
+        <text x="60" y="67" text-anchor="middle" font-family="DM Serif Display" font-style="italic" font-size="22" fill="#fff">CR</text>
+      </svg>
+    </div>
+
+    <div class="chalk-note chalk-note--hero" aria-hidden="true">
+      <span class="chalk">a story in five scenes</span>
+      <svg viewBox="0 0 90 90" class="arrow"><path d="M10 8 C 60 10, 78 38, 52 78 M52 78 l-3 -16 M52 78 l14 -9" /></svg>
+    </div>
+
+    <a class="play" href="#shotlist">
+      <span class="play__dot" aria-hidden="true"></span>
+      Press play
+    </a>
+  </header>
+
+  <main id="reel">
+    <!-- ══════════════ SHOT LIST ══════════════ -->
+    <section class="shotlist" id="shotlist" aria-labelledby="shotlist-title">
+      <div class="clipboard">
+        <span class="clipboard__clip" aria-hidden="true"></span>
+        <div class="clipboard__paper">
+          <div class="paper-head">
+            <h2 id="shotlist-title" class="typewriter">SHOT LIST</h2>
+            <span class="typewriter paper-head__meta">PROD. <span data-bind="school">UWC Costa Rica</span> · DIR. <span data-bind="director">Ulrich</span></span>
+          </div>
+          <ol class="shots" id="shots"><!-- rendered by main.js --></ol>
+          <p class="pen pen--foot">← in a hurry? each scene takes ~30 seconds</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scenes are rendered here by main.js from js/data.js -->
+    <div id="scenes"></div>
+
+    <!-- ══════════════ END CREDITS ══════════════ -->
+    <section class="credits" id="credits" aria-labelledby="credits-title">
+      <div class="credits__roll">
+        <p class="credits__fin" id="credits-title">Fin.</p>
+        <p class="credits__a">a film by</p>
+        <p class="credits__name" data-bind="director">Ulrich</p>
+
+        <h3 class="credits__h">Starring</h3>
+        <ul class="credits__cast" id="cast"></ul>
+
+        <dl class="credits__crew" id="crew"></dl>
+
+        <p class="credits__small" data-bind="place">Santa Ana, Costa Rica</p>
+        <p class="credits__small credits__disclaimer" data-bind="disclaimer"></p>
+
+        <a class="replay" href="#top" id="replay">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" /></svg>
+          Watch again
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Recording HUD -->
+  <div class="hud" aria-hidden="true">
+    <span class="hud__rec"><i></i>REC</span>
+    <span class="hud__tc" id="tc">00:00:00:00</span>
+    <span class="hud__scene" id="hud-scene">OPENING</span>
+  </div>
+
+  <!-- Lightbox -->
+  <dialog class="lightbox" id="lightbox" aria-label="Photo viewer">
+    <figure class="lightbox__frame">
+      <img id="lb-img" src="" alt="" />
+      <figcaption>
+        <span class="lightbox__count typewriter" id="lb-count"></span>
+        <span class="lightbox__cap" id="lb-cap"></span>
+      </figcaption>
+    </figure>
+    <button class="lb-btn lb-btn--prev" id="lb-prev" aria-label="Previous photo">‹</button>
+    <button class="lb-btn lb-btn--next" id="lb-next" aria-label="Next photo">›</button>
+    <button class="lb-btn lb-btn--close" id="lb-close" aria-label="Close">×</button>
+  </dialog>
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
