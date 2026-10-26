@@ -64,6 +64,6 @@ Pega el link en **Additional Information**:
 - Tipografías de Google Fonts: Cabin Sketch, Gochi Hand, Fredoka, Playfair Display, Special Elite y UnifrakturMaguntia.
 - Las fotos de relleno vienen de [Lorem Picsum](https://picsum.photos) (Unsplash License).
 - Texturas reales (ladrillo, madera, papel, cartón y la base de la pizarra) de [ambientCG](https://ambientcg.com), CC0 (dominio público): Bricks058, Wood092, Paper003, Cardboard002 y Concrete034 (teñida de verde). Están procesadas en `assets/tex/` y pesan unos 135 KB en total.
-- Objetos 3D realistas (lupa, linterna, brújula, lentes, cámara y walkman) escaneados por [Poly Haven](https://polyhaven.com), CC0 (dominio público), con la luz del estudio HDRI *studio_small_09* de Poly Haven. Los renderizamos nosotros con la misma luz del sitio y viven en `assets/props/` (unos 320 KB). El estudio de render está en `tools/props/`.
+- Objetos 3D realistas (lupa, linterna, brújula, lentes, cámara y walkman) escaneados por [Poly Haven](https://polyhaven.com), CC0 (dominio público), con la luz del estudio HDRI *studio_small_09* de Poly Haven. Los renderizamos nosotros con la misma luz del sitio y viven en `assets/props/` (unos 260 KB). El estudio de render está en `tools/props/`.
 - Contornos de Costa Rica, Nicaragua y Panamá de [Natural Earth](https://www.naturalearthdata.com) (dominio público), simplificados en `js/geo.js`.
 - Iluminación: una sola luz cálida desde arriba a la izquierda, así que todas las sombras caen hacia abajo a la derecha. En escritorio hay además una "linterna" que sigue al cursor.
