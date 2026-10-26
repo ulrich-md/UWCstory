@@ -39,18 +39,7 @@
     <div class="jside"><p class="jside__h">SIDE B</p><ol start="${half + 1}">${E.slice(half).map((e, i) => track(e, i + half)).join("")}</ol></div>`;
 
   /* ── Hand-drawn map of Costa Rica ───────────────────── */
-  // [lon, lat] outline, simplified
-  const CR = [
-    [-85.70, 11.07], [-85.62, 11.2], [-85.2, 11.05], [-84.9, 10.95], [-84.68, 11.08], [-84.35, 10.95], [-84.2, 10.78],
-    [-83.92, 10.72], [-83.7, 10.93], [-83.55, 10.7], [-83.4, 10.4], [-83.2, 10.15], [-83.03, 9.98], [-82.85, 9.8],
-    [-82.6, 9.6], [-82.56, 9.57], [-82.8, 9.48], [-82.93, 9.3], [-82.93, 9.07], [-82.78, 8.85], [-82.85, 8.6],
-    [-82.88, 8.3], [-82.88, 8.05], [-82.95, 8.2], [-83.1, 8.35], [-83.15, 8.55], [-83.2, 8.65], [-83.3, 8.45],
-    [-83.3, 8.38], [-83.5, 8.42], [-83.72, 8.62], [-83.75, 8.75], [-83.65, 8.95], [-83.8, 9.1], [-84.05, 9.3],
-    [-84.2, 9.42], [-84.5, 9.55], [-84.65, 9.7], [-84.8, 9.95], [-84.95, 10.1], [-85.05, 10.15], [-84.9, 9.85],
-    [-84.95, 9.75], [-85.1, 9.6], [-85.3, 9.7], [-85.55, 9.9], [-85.7, 10.1], [-85.82, 10.3], [-85.8, 10.55],
-    [-85.7, 10.78], [-85.9, 10.9], [-85.75, 11.0],
-  ];
-  const proj = ([lat, lon]) => [(lon + 86.05) * 100, (11.35 - lat) * 100];
+  const proj = ([lat, lon]) => [(lon + 86.05) * 100, (11.55 - lat) * 100];
   const projLL = ([lon, lat]) => proj([lat, lon]);
 
   // Catmull-Rom → cubic Bézier, with optional jitter for a sketchy second stroke
@@ -71,33 +60,38 @@
     return d + (closed ? "Z" : "");
   }
 
-  const outline = CR.map(projLL);
+  const G = window.GEO;
+  const outline = G.cr.map(projLL);
+  const neighbours = [...G.nic, ...G.pan].map((run) => `<path class="land land--nb" d="${smooth(run.map(projLL), false)}"/>`).join("");
   const route = E.map((e) => proj(e.coords));
   const mountains = [[-85.2, 10.75], [-84.95, 10.5], [-84.55, 10.25], [-84.1, 10.05], [-83.8, 9.7], [-83.45, 9.4], [-83.1, 9.15]]
     .map(projLL)
     .map(([x, y], i) => `<path class="mtn" d="M${x - 9},${y + 5} l9,-12 l9,12 ${i % 2 ? `M${x + 4},${y + 5} l6,-8 l6,8` : ""}"/>`)
     .join("");
   $("#mapSvg").innerHTML = `
+    ${neighbours}
+    <text class="nb" x="70" y="14">NICARAGUA</text>
+    <text class="nb" transform="translate(352 300) rotate(-90)">PANAMÁ</text>
     <path class="land land--fill" d="${smooth(outline)}"/>
     <path class="land" d="${smooth(outline, true, 2.2, 3)}"/>
     <path class="land land--2" d="${smooth(outline, true, 3.2, 11)}"/>
     ${mountains}
     <path class="route" d="${smooth(route, false)}"/>
-    <text class="sea" x="48" y="262">Pacific</text>
-    <text class="sea" x="262" y="40">Caribbean</text>
-    <g class="compass" transform="translate(328 262)">
+    <text class="sea" x="40" y="292">Pacific</text>
+    <text class="sea" x="250" y="62">Caribbean</text>
+    <g class="compass" transform="translate(320 140)">
       <circle r="18"/><circle r="12" class="c2"/>
       <path d="M0,-26 L4,0 L0,26 L-4,0Z" class="needle"/><path d="M-26,0 L0,3.5 L26,0 L0,-3.5Z" class="needle needle--h"/>
       <text y="-30" text-anchor="middle">N</text>
     </g>
-    <text class="map-title" x="16" y="326">Costa Rica</text>`;
+    <text class="map-title" x="14" y="348">Costa Rica</text>`;
   const labelled = new Set();
   $("#mapPins").innerHTML = E.map((e, i) => {
     const [x, y] = proj(e.coords);
     // label each place once, so repeated places don't stack labels
     const label = labelled.has(e.place) ? "" : `<span class="mpin__l">${esc(e.place)}</span>`;
     labelled.add(e.place);
-    return `<a class="mpin${x > 250 ? " mpin--flip" : ""}" href="#ev-${e.id}" style="left:${(x / 360) * 100}%;top:${(y / 340) * 100}%" data-mpin="${i}" aria-label="${esc(e.title)} — ${esc(e.place)}">
+    return `<a class="mpin${x > 250 ? " mpin--flip" : ""}" href="#ev-${e.id}" style="left:${(x / 360) * 100}%;top:${(y / 360) * 100}%" data-mpin="${i}" aria-label="${esc(e.title)} — ${esc(e.place)}">
       <span class="mpin__x">${i + 1}</span>${label}</a>`;
   }).join("");
 
@@ -280,8 +274,17 @@
   );
   [...$$("[data-reveal]"), boardEl, $(".folder")].forEach((el) => io.observe(el));
 
-  /* ── Cassette: tilt + holographic sheen ─────────────── */
+  /* ── Cassette: depth layers, tilt + holographic sheen ─ */
   const cassette = $("#cassette");
+  const hp = $("#heroPhoto");
+  hp.src = D.portrait.src;
+  hp.alt = D.portrait.alt;
+  // stacked plates give the plastic shell real thickness when it tilts
+  cassette.insertAdjacentHTML(
+    "afterbegin",
+    `<span class="cassette__shadow" aria-hidden="true"></span>` +
+      Array.from({ length: 6 }, (_, k) => `<span class="cassette__layer" style="--z:${k + 1}" aria-hidden="true"></span>`).join("")
+  );
   if (finePointer && !reduced) {
     const stage = $(".deck");
     stage.addEventListener("pointermove", (e) => {
@@ -297,6 +300,23 @@
       cassette.style.setProperty("--rx", "0deg");
       cassette.style.setProperty("--mx", "50%");
     });
+  }
+
+  /* ── Flashlight: a warm pool of light follows the pointer ── */
+  if (finePointer && !reduced) {
+    let lt = false, lx = 0, ly = 0;
+    addEventListener("pointermove", (e) => {
+      lx = e.clientX;
+      ly = e.clientY;
+      if (lt) return;
+      lt = true;
+      requestAnimationFrame(() => {
+        lt = false;
+        document.documentElement.style.setProperty("--lx", `${lx}px`);
+        document.documentElement.style.setProperty("--ly", `${ly}px`);
+        document.documentElement.classList.add("has-torch");
+      });
+    }, { passive: true });
   }
 
   /* ── Scroll: reels, HUD counter, current label ──────── */

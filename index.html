@@ -15,6 +15,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Fredoka:wght@500;600;700&family=Gochi+Hand&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Special+Elite&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&text=TheUWCCRimsDalyNw&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="preload" as="image" href="assets/tex/bricks.webp" />
+  <link rel="preload" as="image" href="photos/cover/portrait.webp" />
 </head>
 <body>
   <a class="skip" href="#board">Skip to the investigation board</a>
@@ -57,6 +59,15 @@
 
       <!-- The cassette -->
       <div class="cassette" id="cassette" role="img" aria-label="Cassette tape labelled UWCCR, Ulrich, 2024 to 2026 — play it to know me more">
+        <figure class="cassette__photo">
+          <span class="hero-tape" aria-hidden="true"></span>
+          <img id="heroPhoto" src="photos/cover/portrait.webp" width="900" height="1100" alt="" fetchpriority="high" />
+          <figcaption>suspect #1</figcaption>
+        </figure>
+        <div class="exhibit" aria-hidden="true">
+          <span class="exhibit__string"></span>
+          <div class="exhibit__tag"><b>EXHIBIT A</b><span>audio tape</span><span>found at UWCCR</span></div>
+        </div>
         <div class="cassette__shell">
           <span class="screw screw--tl"></span><span class="screw screw--tr"></span>
           <span class="screw screw--bl"></span><span class="screw screw--br"></span>
@@ -119,7 +130,7 @@
             <figure class="map" id="map">
               <div class="map__paper">
                 <div class="map__area">
-                  <svg class="map__svg" id="mapSvg" viewBox="0 0 360 340" aria-hidden="true"></svg>
+                  <svg class="map__svg" id="mapSvg" viewBox="0 0 360 360" aria-hidden="true"></svg>
                   <div class="map__pins" id="mapPins"></div>
                 </div>
               </div>
@@ -209,6 +220,7 @@
   <div class="grain" aria-hidden="true"></div>
 
   <script src="js/data.js"></script>
+  <script src="js/geo.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

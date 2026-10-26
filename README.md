@@ -63,3 +63,6 @@ Pega el link en **Additional Information**:
 - Respeta `prefers-reduced-motion`: si el sistema pide menos movimiento, se desactivan las animaciones.
 - Tipografías de Google Fonts: Cabin Sketch, Gochi Hand, Fredoka, Playfair Display, Special Elite y UnifrakturMaguntia.
 - Las fotos de relleno vienen de [Lorem Picsum](https://picsum.photos) (Unsplash License).
+- Texturas reales (ladrillo, madera, papel, cartón y la base de la pizarra) de [ambientCG](https://ambientcg.com), CC0 (dominio público): Bricks058, Wood092, Paper003, Cardboard002 y Concrete034 (teñida de verde). Están procesadas en `assets/tex/` y pesan unos 135 KB en total.
+- Contornos de Costa Rica, Nicaragua y Panamá de [Natural Earth](https://www.naturalearthdata.com) (dominio público), simplificados en `js/geo.js`.
+- Iluminación: una sola luz cálida desde arriba a la izquierda, así que todas las sombras caen hacia abajo a la derecha. En escritorio hay además una "linterna" que sigue al cursor.
