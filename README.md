@@ -1,14 +1,14 @@
 # My Journey 📼🗺️
 
-Dos años en UWC Costa Rica contados como un **viaje**. Abres un escritorio con un cassette holográfico
-(*"play it to know me more"*), llegas a una pizarra con el mapa del vuelo **Tehuacán, Puebla → Santa Ana**
-y el mapa de Costa Rica, y desde ahí visitas cada **parada** en su propia página.
+Dos años en UWC Costa Rica, en fotos. Abres con tu foto y tu nombre sobre un escritorio (con un cassette
+holográfico, *"play it to know me more"*), ves el mapa del vuelo **Tehuacán, Puebla → Santa Ana** y el de Costa Rica,
+y luego bajas por fotos esparcidas sobre la mesa.
 
 Es un sitio estático: HTML, CSS y JS sin dependencias ni paso de build.
 
 ## La idea
 
-**Fotos esparcidas sobre tu escritorio, bajo una lámpara.** Una sola página, sin títulos ni secciones: abres con tu foto y tu nombre, ves el mapa del viaje (Tehuacán → Santa Ana) y luego bajas por momentos, cada uno con un pequeño collage de fotos y **una sola nota a mano**.
+**Fotos esparcidas sobre tu escritorio, bajo una lámpara.** Una sola página, **sin frases**: sin títulos, sin notas, sin secciones. Solo montones de fotos, uno tras otro. La única escritura es el lugar a mano en una polaroid y la fecha naranja de cámara vieja en las impresiones.
 
 No es tu activity list (eso ya está en la Common App): aquí no hay logros, números ni cargos. Es el otro lado: tus amigos, el humor, los días difíciles, tu cultura.
 
@@ -19,26 +19,26 @@ python3 -m http.server 8000
 # abre http://localhost:8000
 ```
 
-## Cómo poner TUS fotos y notas
+## Cómo poner TUS fotos
 
-Todo vive en **un solo archivo: `js/data.js`**. Cada objeto de `moments` es un collage:
+Todo vive en **un solo archivo: `js/data.js`**. Cada objeto de `moments` es un montón de fotos:
 
 ```js
 {
-  when: "Aug 2025",            // sale en la nota y como fecha naranja en las fotos
-  where: "Santa Ana",
+  when: "Aug 2025",            // fecha naranja en las fotos y arriba de la pantalla
+  where: "Santa Ana",          // escrito a mano en la primera polaroid
   coords: [9.93, -84.18],      // opcional: agrega un pin en el mapa (o usa places: [...])
-  note: "Una sola frase tuya, a mano. Sin logros: cómo se sintió.",
-  photos: [ { src, w, h, alt, caption }, ... ]   // 3 a 5; la primera es la más grande
+  photos: [ { src, w, h, alt, caption }, ... ]   // 3 a 7 por montón; más de 7 se reparte en varios
 }
 ```
 
-- El collage se arma solo según cuántas fotos pongas (3, 4 o 5). Cada momento se acomoda en espejo respecto al anterior para que el escritorio no se repita.
+- El montón se acomoda solo según cuántas fotos pongas. Cada uno queda en espejo respecto al anterior para que el escritorio no se repita. En el celular las fotos bajan en zigzag, encimadas.
 - **Fotos:** guárdalas en `photos/` y actualiza `src`, `w` y `h`. El formato recomendado es `.webp` o `.jpg`, con un lado largo de 1000 a 1400 px.
-- **`thesis`:** la frase de la primera pantalla. **`letter`:** la nota final.
+- **`caption`** (opcional) cambia lo escrito en una polaroid. Que sea un nombre o un lugar, no una frase.
+- **`alt`** lo leen los lectores de pantalla: describe la foto.
 - **Pide permiso** a los amigos que aparezcan de cerca.
 
-> ⚠️ Todas las fotos y notas actuales son **borradores**. Deja solo lo que sea verdad y reescribe las notas hasta que suenen a ti.
+> ⚠️ Todas las fotos actuales son **de relleno** hasta que lleguen las reales.
 
 ## Publicarlo gratis
 

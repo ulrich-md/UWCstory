@@ -1,5 +1,5 @@
 /* MY JOURNEY · photos scattered on a desk under a lamp (no dependencies)
- * opening (who) → maps on the desk → moments, one after another → a last note
+ * opening (who) → maps on the desk → photos, one pile after another → rewind
  */
 (() => {
   const D = window.JOURNEY;
@@ -38,8 +38,6 @@
   });
   $("#heroPhoto").src = D.portrait.src;
   $("#heroPhoto").alt = D.portrait.alt;
-  $("#thesis").textContent = `“${D.thesis}”`;
-  $("#letter").innerHTML = D.letter.map((l) => `<p>${esc(l)}</p>`).join("");
 
   /* ── Photos + lightbox registry ─────────────────────── */
   const all = [];
@@ -137,21 +135,30 @@
       <path class="flight" d="M${a[0]},${a[1]} Q${c[0]},${c[1]} ${b[0]},${b[1]}"/>
       <g class="plane" transform="translate(${px} ${py}) rotate(${ang})"><path d="M10 0 L-6 -3 L-9 -9 L-11 -9 L-8 -2.4 L-13 -2 L-15 -5 L-17 -5 L-15 0 L-17 5 L-15 5 L-13 2 L-8 2.4 L-11 9 L-9 9 L-6 3 Z"/></g>`;
     $("#flightPins").innerHTML = dot(D.from, a[0], a[1], 400, 292, false) + dot(D.campus, b[0], b[1], 400, 292, true);
-    // great-circle distance for the little note on the desk
+    // great-circle distance, typed on a scrap next to the maps
     const rad = (d) => (d * Math.PI) / 180;
     const [la1, lo1] = D.from.coords.map(rad), [la2, lo2] = D.campus.coords.map(rad);
     const km = 6371 * 2 * Math.asin(Math.sqrt(Math.sin((la2 - la1) / 2) ** 2 + Math.cos(la1) * Math.cos(la2) * Math.sin((lo2 - lo1) / 2) ** 2));
     $("#distance").textContent = `${D.from.place} → ${D.campus.place} · ${(Math.round(km / 100) * 100).toLocaleString("en")} km`;
   })();
 
-  /* ── Moments: little collages, no titles ────────────── */
-  // slot = [left %, top %, width %, rotation, kind]; kind p = polaroid, r = print, w = wide print
+  /* ── Moments: photos scattered on the desk, no words ── */
+  // slot = [left %, top, width %, rotation, kind] — top is in % of the WIDTH, so piles keep their shape
+  // kind p = polaroid, r = print (4:3), w = wide print (3:2); ratio = printed height / width
+  const RATIO = { p: 1.13, r: 0.77, w: 0.69 };
   const T = {
-    five: { h: 0.74, slots: [[3, 3, 35, -3, "p"], [40, 0, 29, 3, "r"], [72, 7, 24, -5, "p"], [42, 42, 27, -2, "r"], [24, 60, 18, 6, "p"]], note: [71, 58, 26, 2] },
-    four: { h: 0.66, slots: [[1, 20, 30, -4, "r"], [29, 0, 27, 3, "p"], [57, 26, 25, -2, "r"], [78, 4, 21, 5, "p"]], note: [26, 62, 36, -1.5] },
-    three: { h: 0.6, slots: [[4, 8, 44, -2, "w"], [50, 0, 24, 4, "p"], [75, 24, 23, -3, "r"]], note: [52, 64, 34, 2] },
+    3: [[2, 4, 40, -3, "w"], [39, 0, 25, 4, "p"], [63, 12, 33, -2, "r"]],
+    4: [[2, 2, 36, -3, "r"], [36, 18, 24, 5, "p"], [58, 0, 26, -4, "p"], [70, 27, 27, 2, "r"]],
+    5: [[2, 4, 33, -3, "p"], [34, 0, 30, 3, "r"], [67, 6, 29, -5, "w"], [37, 24, 25, -2, "r"], [66, 28, 22, 6, "p"]],
+    6: [[1, 6, 30, -4, "r"], [27, 0, 24, 3, "p"], [50, 8, 28, -2, "w"], [76, 0, 22, 5, "p"], [12, 30, 27, 2, "p"], [44, 31, 31, -3, "r"]],
+    7: [[1, 6, 30, -4, "r"], [27, 0, 24, 3, "p"], [50, 8, 28, -2, "w"], [76, 0, 22, 5, "p"], [12, 30, 27, 2, "p"], [44, 31, 30, -3, "r"], [76, 27, 21, -6, "r"]],
   };
-  const pick = (n) => (n >= 5 ? T.five : n === 4 ? T.four : T.three);
+  // a big pile is laid out as a few smaller ones, one after another
+  const chunks = (n) => {
+    if (n <= 7) return [Math.max(3, n)];
+    const k = Math.ceil(n / 6);
+    return Array.from({ length: k }, (_, i) => Math.floor(n / k) + (i < n % k ? 1 : 0));
+  };
   const washi = ["a", "b", "c", "d"];
   const propsBetween = [
     { after: 1, src: "flashlight", w: 676, h: 733, side: "r" },
@@ -160,36 +167,40 @@
     { after: 7, src: "camera", w: 749, h: 801, side: "l" },
   ];
 
+  let pile = 0;
   $("#flow").innerHTML = M.map((m, mi) => {
-    const t = pick(m.photos.length);
-    const flip = mi % 2 === 1; // mirror every other collage so the desk doesn't repeat
     const stamp = stampOf(m.when);
-    const items = m.photos.slice(0, t.slots.length).map((p, k) => {
-      const gi = reg(p, m, k);
-      let [l, tp, w, r, kind] = t.slots[k];
-      if (flip) { l = 100 - l - w; r = -r; }
-      return `
-        <figure class="ph ph--${kind}" style="--l:${l}%;--t:${tp}%;--w:${w}%;--r:${r}deg;--i:${k}">
+    const label = [m.when, m.where].filter(Boolean).join(" · ");
+    let k0 = 0;
+    let captioned = false;
+    const piles = chunks(m.photos.length).map((n) => {
+      const slots = T[n];
+      const flip = pile++ % 2 === 1; // mirror every other pile so the desk doesn't repeat
+      const photos = m.photos.slice(k0, k0 + n);
+      const h = Math.max(...slots.slice(0, photos.length).map(([, t, w, , kind]) => t + w * RATIO[kind])) + 3;
+      const items = photos.map((p, j) => {
+        const k = k0 + j;
+        const gi = reg(p, m, k);
+        let [l, tp, w, r, kind] = slots[j];
+        if (flip) { l = 100 - l - w; r = -r; }
+        // the first polaroid of a moment gets the place written on it, nothing more
+        let cap = p.caption || "";
+        if (kind === "p" && !captioned) { cap = cap || (m.places ? "" : m.where || ""); captioned = true; }
+        return `
+        <figure class="ph ph--${kind}" style="--l:${l}%;--t:${((tp / h) * 100).toFixed(2)}%;--w:${w}%;--r:${r}deg;--i:${j}">
           ${kind !== "p" ? `<span class="washi washi--${washi[(mi + k) % 4]}" aria-hidden="true"></span>` : ""}
           ${zoom(gi, p)}
           ${kind !== "p" && stamp ? `<span class="ph__date" aria-hidden="true">${esc(stamp)}</span>` : ""}
-          ${p.caption ? `<figcaption class="ph__cap">${esc(p.caption)}</figcaption>` : ""}
+          ${cap ? `<figcaption class="ph__cap">${esc(cap)}</figcaption>` : ""}
         </figure>`;
+      }).join("");
+      k0 += n;
+      return `<div class="mo__collage" style="--h:${(h / 100).toFixed(3)}">${items}</div>`;
     }).join("");
-    // photos beyond the template's slots still open in the viewer
-    m.photos.slice(t.slots.length).forEach((p, k) => reg(p, m, t.slots.length + k));
-    let [nl, nt, nw, nr] = t.note;
-    if (flip) { nl = 100 - nl - nw; nr = -nr; }
     const prop = propsBetween.find((p) => p.after === mi);
     return `
-    <section class="mo${flip ? " mo--flip" : ""}" data-i="${mi}" aria-label="${esc([m.when, m.where].filter(Boolean).join(", "))}">
-      <div class="mo__collage" style="--h:${t.h}">
-        ${items}
-        <p class="note" style="--l:${nl}%;--t:${nt}%;--w:${nw}%;--r:${nr}deg">
-          <span class="note__meta">${esc([m.when, m.where].filter(Boolean).join(" · "))}</span>
-          <span class="note__hand">${esc(m.note)}</span>
-        </p>
-      </div>
+    <section class="mo" data-i="${mi}" aria-label="${esc(label)}">
+      ${piles}
       ${prop ? `<img class="prop prop--side prop--${prop.side}" src="assets/props/${prop.src}.webp" width="${prop.w}" height="${prop.h}" alt="" aria-hidden="true" loading="lazy" decoding="async" />` : ""}
     </section>`;
   }).join("");
@@ -233,7 +244,7 @@
     lbImg.alt = p.alt;
     lbImg.width = p.w;
     lbImg.height = p.h;
-    $("#lb-cap").textContent = p.caption || p.m.note;
+    $("#lb-cap").textContent = p.caption || "";
     $("#lb-count").textContent = `${[p.m.when, p.m.where].filter(Boolean).join(" · ").toUpperCase()} · ${p.i + 1}/${p.m.photos.length}`;
   }
   document.addEventListener("click", (e) => {

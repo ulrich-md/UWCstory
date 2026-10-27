@@ -36,8 +36,7 @@
       <div class="hero__card">
         <h1 class="hero__name" data-bind="name">Ulrich Mohrhardt Doger</h1>
         <p class="hero__line" data-bind="line"></p>
-        <blockquote class="hero__thesis"><p id="thesis"></p></blockquote>
-        <a class="hero__go" href="#moments" id="play"><span class="hand">this is what the essay couldn't fit</span><span class="hero__arrow" aria-hidden="true">↓</span></a>
+        <a class="hero__go" href="#moments" id="play" aria-label="See the photos"><span class="hero__arrow" aria-hidden="true">↓</span></a>
       </div>
 
       <!-- the tape: decorative, its reels wind as you scroll -->
@@ -83,20 +82,15 @@
         </div></div>
         <figcaption class="sr-only">Map of Costa Rica with the places in these photos marked.</figcaption>
       </figure>
-      <p class="note note--map"><span class="note__meta" id="distance"></span><span class="note__hand">I left with one suitcase. These are the places that filled it back up.</span></p>
+      <p class="note note--map"><span class="note__meta" id="distance"></span></p>
       <img class="prop prop--compass" src="assets/props/compass.webp" width="420" height="553" alt="" aria-hidden="true" decoding="async" loading="lazy" />
     </section>
 
-    <!-- moments are rendered here from js/data.js -->
+    <!-- the photos are scattered here from js/data.js -->
     <div id="flow"></div>
 
-    <section class="spread spread--end" aria-label="A last note">
+    <section class="spread spread--end" aria-label="The end of the tape">
       <img class="prop prop--walkman" src="assets/props/walkman.webp" width="533" height="681" alt="" aria-hidden="true" decoding="async" loading="lazy" />
-      <div class="letter">
-        <span class="washi washi--b" aria-hidden="true"></span>
-        <div id="letter"></div>
-        <p class="letter__sig" data-bind="signature">— Ulrich</p>
-      </div>
       <a class="rewind" href="#top" id="rewind"><span aria-hidden="true">⏪</span> rewind</a>
     </section>
   </main>
