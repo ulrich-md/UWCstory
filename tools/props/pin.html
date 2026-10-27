@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:transparent}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script></head><body>
+<script type="module">
+import * as THREE from 'three';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+const q = new URLSearchParams(location.search);
+const S = 512, color = new THREE.Color(q.get('c') || '#d11a2a');
+const r = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+r.setSize(S, S); r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping;
+r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap; r.setClearColor(0, 0);
+document.body.appendChild(r.domElement);
+const scene = new THREE.Scene();
+const pm = new THREE.PMREMGenerator(r);
+scene.environment = pm.fromEquirectangular(await new RGBELoader().loadAsync('hdri/studio.hdr')).texture;
+scene.environmentIntensity = 0.8;
+// map pin: glossy plastic ball on a steel needle, stuck into the board at a slight angle
+const pin = new THREE.Group();
+const plastic = new THREE.MeshPhysicalMaterial({ color, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.08, sheen: 0.2 });
+const ball = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 48), plastic);
+ball.position.y = 1.9; ball.castShadow = true; pin.add(ball);
+const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.5, 0.45, 40), plastic);
+collar.position.y = 1.0; collar.castShadow = true; pin.add(collar);
+const steel = new THREE.MeshStandardMaterial({ color: 0xcfd3d8, metalness: 1, roughness: 0.25 });
+const needle = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 1.2, 16), steel);
+needle.position.y = 0.4; needle.castShadow = true; pin.add(needle);
+pin.rotation.z = THREE.MathUtils.degToRad(+(q.get('tilt') || 14));
+pin.rotation.y = THREE.MathUtils.degToRad(+(q.get('turn') || 35));
+scene.add(pin);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.5 }));
+ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+const key = new THREE.DirectionalLight(0xfff1dc, 2.8);
+key.position.set(-4, 9, -3); key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.radius = 5;
+Object.assign(key.shadow.camera, { left: -6, right: 6, top: 6, bottom: -6, near: 0.1, far: 40 }); scene.add(key);
+const cam = new THREE.OrthographicCamera(-2.6, 2.6, 2.6, -2.6, 0.1, 100);
+cam.position.set(0, 30, 0); cam.up.set(0, 0, -1); cam.lookAt(0, 1.2, 0);
+r.render(scene, cam);
+window.__done = r.domElement.toDataURL('image/png');
+</script></body></html>

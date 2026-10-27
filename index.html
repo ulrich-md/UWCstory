@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>The Ulrich Files</title>
-  <meta name="description" content="Two years at UWC Costa Rica, investigated one event at a time. Press play to know me more." />
-  <meta name="theme-color" content="#121212" />
-  <meta property="og:title" content="The Ulrich Files — UWC Costa Rica" />
-  <meta property="og:description" content="Two years at UWC Costa Rica, one event at a time." />
+  <title>My Journey — UWC Costa Rica</title>
+  <meta name="description" content="Two years at UWC Costa Rica, one stop at a time. Press play to know me more." />
+  <meta name="theme-color" content="#1c120b" />
+  <meta property="og:title" content="My Journey — UWC Costa Rica" />
+  <meta property="og:description" content="Two years at UWC Costa Rica, one stop at a time." />
   <meta property="og:image" content="photos/cover/portrait.webp" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='2' y='12' width='60' height='40' rx='6' fill='%23e9ecf2'/%3E%3Crect x='12' y='24' width='40' height='14' rx='7' fill='%231d2456'/%3E%3Ccircle cx='21' cy='31' r='5' fill='%23cfd4de'/%3E%3Ccircle cx='43' cy='31' r='5' fill='%23cfd4de'/%3E%3Crect x='16' y='44' width='32' height='4' fill='%23c8102e'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -15,28 +15,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Fredoka:wght@500;600;700&family=Gochi+Hand&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Special+Elite&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&text=TheUWCCRimsDalyNw&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="preload" as="image" href="assets/tex/bricks.webp" />
+  <link rel="preload" as="image" href="assets/tex/desk.webp" />
   <link rel="preload" as="image" href="photos/cover/portrait.webp" />
 </head>
-<body>
-  <a class="skip" href="#board">Skip to the investigation board</a>
+<body data-page="home">
+  <a class="skip" href="#board">Skip to the map</a>
 
-  <svg class="defs" aria-hidden="true" focusable="false" width="0" height="0">
-    <defs>
-      <filter id="rough">
-        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="n" />
-        <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" />
-      </filter>
-      <filter id="chalky">
-        <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="7" result="n" />
-        <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 -1.6 1.35" result="m" />
-        <feComposite in="SourceGraphic" in2="m" operator="in" result="c" />
-        <feDisplacementMap in="c" in2="n" scale="1.6" />
-      </filter>
-    </defs>
-  </svg>
-
-  <!-- ══════════════ SIDE A · THE TAPE ══════════════ -->
+  <!-- ══════════════ THE DESK ══════════════ -->
   <header class="deck" id="top">
     <div class="spot spot--deck" aria-hidden="true"></div>
     <!-- real objects: CC0 Poly Haven scans, rendered with the site's top-left key light -->
@@ -44,32 +29,32 @@
     <img class="prop prop--specs" src="assets/props/spectacles.webp" width="773" height="331" alt="" aria-hidden="true" decoding="async" />
 
     <div class="deck__stamp" aria-hidden="true">
-      <span>CONFIDENTIAL</span>
-      <small>case #<b data-bind="caseNo">UWCCR-2426</b></small>
+      <span>UWC · COSTA RICA</span>
+      <small>entry · <b data-bind="years">2024 — 2026</b></small>
     </div>
 
     <div class="deck__stage">
       <!-- J-card (tracklist) -->
       <aside class="jcard" aria-labelledby="tracks-title">
-        <div class="jcard__spine" aria-hidden="true"><span data-bind="name">Ulrich</span><span>·</span><span data-bind="years">2024 — 2026</span></div>
+        <div class="jcard__spine" aria-hidden="true"><span data-bind="title">My Journey</span><span>·</span><span data-bind="years">2024 — 2026</span></div>
         <div class="jcard__body">
           <p class="jcard__brand">UWC<b>CR</b> <span>TYPE II · CHROME</span></p>
           <h2 id="tracks-title" class="jcard__title">Tracklist</h2>
           <div class="jcard__sides" id="tracks"><!-- rendered --></div>
-          <p class="jcard__foot">In a hurry? Each track takes ~20 sec.</p>
+          <p class="jcard__foot">In a hurry? Each stop takes ~20 sec.</p>
         </div>
       </aside>
 
       <!-- The cassette -->
-      <div class="cassette" id="cassette" role="img" aria-label="Cassette tape labelled UWCCR, Ulrich, 2024 to 2026 — play it to know me more">
+      <div class="cassette" id="cassette" role="img" aria-label="Cassette tape labelled My Journey, UWC Costa Rica, Ulrich, 2024 to 2026 — play it to know me more">
         <figure class="cassette__photo">
           <span class="hero-tape" aria-hidden="true"></span>
           <img id="heroPhoto" src="photos/cover/portrait.webp" width="900" height="1100" alt="" fetchpriority="high" />
-          <figcaption>suspect #1</figcaption>
+          <figcaption>me, day one</figcaption>
         </figure>
         <div class="exhibit" aria-hidden="true">
           <span class="exhibit__string"></span>
-          <div class="exhibit__tag"><b>EXHIBIT A</b><span>audio tape</span><span>found at UWCCR</span></div>
+          <div class="exhibit__tag"><b>BAGGAGE TAG</b><span>from: home</span><span>to: UWC Costa Rica</span></div>
         </div>
         <div class="cassette__shell">
           <span class="screw screw--tl"></span><span class="screw screw--tr"></span>
@@ -79,8 +64,8 @@
             <div class="label__holo" aria-hidden="true"></div>
             <div class="label__top">
               <div>
-                <p class="label__title">UWC<span>CR</span></p>
-                <p class="label__sub">two years · one case file</p>
+                <h1 class="label__title">My <span>Journey</span></h1>
+                <p class="label__sub">two years at UWC Costa Rica</p>
               </div>
               <p class="label__year"><span>20</span><sup>24</sup><small>— 26</small></p>
             </div>
@@ -110,14 +95,14 @@
     </div>
 
     <nav class="transport" aria-label="Tape controls">
-      <a class="tbtn" href="#credits" aria-label="Skip to the end">⏭</a>
+      <a class="tbtn" href="end.html" aria-label="Skip to the end">⏭</a>
       <a class="tbtn tbtn--play" href="#board" id="play"><span class="tbtn__tri" aria-hidden="true"></span>Press play</a>
-      <span class="transport__hint">open the case file</span>
+      <span class="transport__hint">see the map</span>
     </nav>
   </header>
 
   <main>
-    <!-- ══════════════ THE BOARD ══════════════ -->
+    <!-- ══════════════ THE MAP BOARD ══════════════ -->
     <section class="board-sec" id="board" aria-labelledby="board-title">
       <div class="spot spot--board" aria-hidden="true"></div>
       <img class="prop prop--flashlight" src="assets/props/flashlight.webp" width="676" height="733" alt="" aria-hidden="true" decoding="async" loading="lazy" />
@@ -126,11 +111,21 @@
           <svg class="strings" aria-hidden="true"><g></g></svg>
 
           <header class="board__head">
-            <h2 id="board-title" class="chalk-title">The <span data-bind="name">Ulrich</span> Files</h2>
-            <p class="chalk board__sub">two years · <span id="evCount">6</span> pieces of evidence · 1 suspect</p>
+            <h2 id="board-title" class="chalk-title" data-bind="title">My Journey</h2>
+            <p class="chalk board__sub">two years · <span id="evCount">6</span> stops · one map</p>
           </header>
 
           <div class="board__grid" id="boardGrid">
+            <div class="maps">
+            <figure class="map map--flight">
+              <div class="map__paper">
+                <div class="map__area">
+                  <svg class="map__svg" id="flightSvg" viewBox="0 0 400 292" aria-hidden="true"></svg>
+                  <div class="map__pins" id="flightPins"></div>
+                </div>
+              </div>
+              <figcaption class="sr-only">Map of Mexico and Central America with the flight from Tehuacán, Puebla to Santa Ana, Costa Rica.</figcaption>
+            </figure>
             <figure class="map" id="map">
               <div class="map__paper">
                 <div class="map__area">
@@ -138,29 +133,30 @@
                   <div class="map__pins" id="mapPins"></div>
                 </div>
               </div>
-              <figcaption class="sr-only">Hand-drawn map of Costa Rica with the place of each event marked.</figcaption>
+              <figcaption class="sr-only">Hand-drawn map of Costa Rica with every stop of the journey marked.</figcaption>
             </figure>
-            <!-- event polaroids rendered here -->
+            </div>
+            <!-- stop polaroids rendered here -->
           </div>
 
           <div class="board__props">
-            <div class="notepad" data-pin>
+            <div class="notepad">
               <span class="pin pin--green" aria-hidden="true"></span>
-              <p class="notepad__h">Suspect profile</p>
+              <p class="notepad__h">Traveler profile</p>
               <dl id="profile"></dl>
             </div>
 
             <div class="doodles" aria-hidden="true">
-              <span class="chalk doodle doodle--secret">TOP SECRET</span>
-              <span class="chalk doodle doodle--q">???</span>
+              <span class="chalk doodle doodle--secret">WISH YOU WERE HERE</span>
+              <span class="chalk doodle doodle--q">!!!</span>
               <svg class="doodle-thumb" viewBox="0 0 60 60"><path d="M18 52 V28 M18 28 h-8 v24 h8 M18 30 l10 -18 c4 -6 10 -2 8 4 l-3 10 h14 c5 0 7 5 4 8 c3 3 1 7 -2 8 c2 3 0 7 -4 7 c1 4 -2 6 -6 6 H22" /></svg>
             </div>
 
-            <article class="news news--board" data-pin>
+            <article class="news news--board">
               <span class="pin pin--red" aria-hidden="true"></span>
               <header class="news__mast"><p class="news__name">The UWCCR Times</p><p class="news__line"><span>Extra edition</span><span data-bind="years">2024 — 2026</span><span>1 colón</span></p></header>
               <h3 class="news__head">Student spends two years at UWC, refuses to be summarized in 650 words</h3>
-              <div class="news__cols" aria-hidden="true"><i></i><i></i><i></i></div>
+              <p class="news__body" aria-hidden="true">SANTA ANA — After two years, eighteen time zones of friends and an unreasonable amount of gallo pinto, the student has declined every attempt to fit the experience into a single essay. “It’s easier with pictures,” the student said, pointing at the board. Editors agree. Readers are advised to start at stop one and follow the red string. Further coverage on every page of this edition.</p>
             </article>
           </div>
 
@@ -169,61 +165,13 @@
         </div>
         <div class="tray" aria-hidden="true"><i></i><i></i><i class="tray__eraser"></i></div>
       </div>
-    </section>
 
-    <!-- ══════════════ EVIDENCE (one per event) ══════════════ -->
-    <div class="case" id="case"></div>
-
-    <!-- ══════════════ CASE CLOSED ══════════════ -->
-    <section class="closed" id="credits" aria-labelledby="closed-title">
-      <div class="spot spot--closed" aria-hidden="true"></div>
-      <img class="prop prop--walkman" src="assets/props/walkman.webp" width="533" height="681" alt="" aria-hidden="true" decoding="async" loading="lazy" />
-      <div class="folder">
-        <span class="folder__tab">CASE #<b data-bind="caseNo">UWCCR-2426</b></span>
-        <div class="folder__page">
-          <h2 id="closed-title" class="typed">FINAL REPORT</h2>
-          <dl class="report" id="report"></dl>
-          <p class="verdict" data-bind="verdict">Verdict: worth getting to know.</p>
-          <span class="bigstamp" aria-hidden="true">CASE CLOSED</span>
-        </div>
+      <div class="start">
+        <a class="tbtn tbtn--play" id="startLink" href="stop.html"><span class="tbtn__tri" aria-hidden="true"></span>Start the journey</a>
+        <span class="transport__hint">stop 01 · <span id="startTitle">Arrival</span></span>
       </div>
-
-      <div class="liner">
-        <div class="liner__head">
-          <span>SIDE B · LINER NOTES</span><span data-bind="years">2024 — 2026</span>
-        </div>
-        <h3 class="liner__h">Featuring</h3>
-        <ul class="liner__cast" id="cast"></ul>
-        <dl class="liner__credits" id="creditsList"></dl>
-      </div>
-
-      <a class="tbtn tbtn--rewind" href="#top" id="rewind"><span aria-hidden="true">⏪</span> Rewind</a>
     </section>
   </main>
-
-  <!-- Mini cassette HUD -->
-  <div class="hud" aria-hidden="true">
-    <span class="hud__tape"><i class="hud__reel"></i><i class="hud__reel"></i></span>
-    <span class="hud__side" id="hudSide">SIDE A</span>
-    <span class="hud__count" id="hudCount">000</span>
-    <span class="hud__label" id="hudLabel">INTRO</span>
-  </div>
-
-  <!-- Lightbox -->
-  <dialog class="lightbox" id="lightbox" aria-label="Photo viewer">
-    <figure class="lightbox__frame">
-      <img id="lb-img" src="" alt="" />
-      <figcaption>
-        <span class="lightbox__count" id="lb-count"></span>
-        <span class="lightbox__cap" id="lb-cap"></span>
-      </figcaption>
-    </figure>
-    <button class="lb-btn lb-btn--prev" id="lb-prev" aria-label="Previous photo">‹</button>
-    <button class="lb-btn lb-btn--next" id="lb-next" aria-label="Next photo">›</button>
-    <button class="lb-btn lb-btn--close" id="lb-close" aria-label="Close">×</button>
-  </dialog>
-
-  <div class="grain" aria-hidden="true"></div>
 
   <script src="js/data.js"></script>
   <script src="js/geo.js"></script>
