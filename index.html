@@ -3,25 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>My Journey — UWC Costa Rica</title>
-  <meta name="description" content="Two years at UWC Costa Rica, one stop at a time. Press play to know me more." />
+  <title>My Journey — Ulrich Mohrhardt Doger · UWC Costa Rica</title>
+  <meta name="description" content="A two-minute visual journey: from Tehuacán, Puebla to UWC Costa Rica, Class of 2027." />
   <meta name="theme-color" content="#1c120b" />
-  <meta property="og:title" content="My Journey — UWC Costa Rica" />
-  <meta property="og:description" content="Two years at UWC Costa Rica, one stop at a time." />
+  <meta property="og:title" content="My Journey — Ulrich Mohrhardt Doger" />
+  <meta property="og:description" content="From Tehuacán, Puebla to UWC Costa Rica. A two-minute visual journey." />
   <meta property="og:image" content="photos/cover/portrait.webp" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='2' y='12' width='60' height='40' rx='6' fill='%23e9ecf2'/%3E%3Crect x='12' y='24' width='40' height='14' rx='7' fill='%231d2456'/%3E%3Ccircle cx='21' cy='31' r='5' fill='%23cfd4de'/%3E%3Ccircle cx='43' cy='31' r='5' fill='%23cfd4de'/%3E%3Crect x='16' y='44' width='32' height='4' fill='%23c8102e'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Fredoka:wght@500;600;700&family=Gochi+Hand&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Special+Elite&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Fredoka:wght@500;600;700&family=Gochi+Hand&family=Playfair+Display:ital,wght@0,700;0,900;1,500;1,700&family=Special+Elite&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&text=TheUWCCRimsDalyNw&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="preload" as="image" href="assets/tex/desk.webp" />
   <link rel="preload" as="image" href="photos/cover/portrait.webp" />
+  <link rel="preload" as="image" href="assets/tex/desk.webp" />
 </head>
 <body data-page="home">
-  <a class="skip" href="#board">Skip to the map</a>
+  <a class="skip" href="#route">Skip to the route</a>
 
-  <!-- ══════════════ THE DESK ══════════════ -->
+  <!-- ══════════════ 1 · WHO (10 seconds) ══════════════ -->
   <header class="deck" id="top">
     <div class="spot spot--deck" aria-hidden="true"></div>
     <!-- real objects: CC0 Poly Haven scans, rendered with the site's top-left key light -->
@@ -30,133 +30,97 @@
 
     <div class="deck__stamp" aria-hidden="true">
       <span>UWC · COSTA RICA</span>
-      <small>entry · <b data-bind="years">2024 — 2026</b></small>
+      <small>entry · <b data-bind="years">2025 — 2027</b></small>
     </div>
 
-    <div class="deck__stage">
-      <!-- J-card (tracklist) -->
-      <aside class="jcard" aria-labelledby="tracks-title">
-        <div class="jcard__spine" aria-hidden="true"><span data-bind="title">My Journey</span><span>·</span><span data-bind="years">2024 — 2026</span></div>
-        <div class="jcard__body">
-          <p class="jcard__brand">UWC<b>CR</b> <span>TYPE II · CHROME</span></p>
-          <h2 id="tracks-title" class="jcard__title">Tracklist</h2>
-          <div class="jcard__sides" id="tracks"><!-- rendered --></div>
-          <p class="jcard__foot">In a hurry? Each stop takes ~20 sec.</p>
-        </div>
-      </aside>
+    <div class="hero">
+      <figure class="hero__photo">
+        <span class="hero-tape" aria-hidden="true"></span>
+        <img id="heroPhoto" src="photos/cover/portrait.webp" width="760" height="950" alt="" fetchpriority="high" />
+        <figcaption>me, UWC Costa Rica</figcaption>
+      </figure>
 
-      <!-- The cassette -->
-      <div class="cassette" id="cassette" role="img" aria-label="Cassette tape labelled My Journey, UWC Costa Rica, Ulrich, 2024 to 2026 — play it to know me more">
-        <figure class="cassette__photo">
-          <span class="hero-tape" aria-hidden="true"></span>
-          <img id="heroPhoto" src="photos/cover/portrait.webp" width="900" height="1100" alt="" fetchpriority="high" />
-          <figcaption>me, day one</figcaption>
-        </figure>
-        <div class="exhibit" aria-hidden="true">
-          <span class="exhibit__string"></span>
-          <div class="exhibit__tag"><b>BAGGAGE TAG</b><span>from: home</span><span>to: UWC Costa Rica</span></div>
+      <div class="hero__card">
+        <p class="hero__kicker">My Journey · Tehuacán → Costa Rica</p>
+        <h1 class="hero__name" data-bind="name">Ulrich Mohrhardt Doger</h1>
+        <ul class="hero__meta" id="heroMeta"></ul>
+        <blockquote class="hero__thesis"><p id="thesis"></p></blockquote>
+        <p class="hero__sub" id="thesisSub"></p>
+        <div class="hero__cta">
+          <a class="tbtn tbtn--play" href="#route" id="play"><span class="tbtn__tri" aria-hidden="true"></span>Press play</a>
+          <span class="hero__time">2-minute scroll · <span id="stopCount">9</span> stops</span>
         </div>
+      </div>
+
+      <!-- the tape: decorative, its reels wind as you scroll -->
+      <a class="cassette cassette--prop" id="cassette" href="#route" aria-label="Play the journey">
         <div class="cassette__shell">
           <span class="screw screw--tl"></span><span class="screw screw--tr"></span>
           <span class="screw screw--bl"></span><span class="screw screw--br"></span>
-
           <div class="label">
             <div class="label__holo" aria-hidden="true"></div>
             <div class="label__top">
               <div>
-                <h1 class="label__title">My <span>Journey</span></h1>
-                <p class="label__sub">two years at UWC Costa Rica</p>
+                <p class="label__title">My <span>Journey</span></p>
+                <p class="label__sub">side A · 2025 — side B · 2027</p>
               </div>
-              <p class="label__year"><span>20</span><sup>24</sup><small>— 26</small></p>
             </div>
-
             <div class="window">
               <div class="reel reel--l"><span class="reel__tape"></span><span class="reel__hub"><i></i></span></div>
-              <div class="window__mid">
-                <span class="window__ticks"></span>
-                <span class="window__nums"><i>100</i><i>50</i><i>0</i></span>
-              </div>
+              <div class="window__mid"><span class="window__ticks"></span><span class="window__nums"><i>100</i><i>50</i><i>0</i></span></div>
               <div class="reel reel--r"><span class="reel__tape"></span><span class="reel__hub"><i></i></span></div>
             </div>
-
-            <div class="label__name">
-              <span class="label__x">✕</span>
-              <span class="label__hand" data-bind="name">Ulrich</span>
-            </div>
+            <div class="label__name"><span class="label__x">✕</span><span class="label__hand" data-bind="short">Ulrich</span></div>
             <span class="sticker-play">PLAY IT TO<br />KNOW ME MORE</span>
           </div>
-
-          <div class="cassette__bottom">
-            <span class="hole"></span><span class="screw screw--c"></span><span class="hole"></span>
-          </div>
+          <div class="cassette__bottom"><span class="hole"></span><span class="screw screw--c"></span><span class="hole"></span></div>
           <span class="cassette__shine" aria-hidden="true"></span>
         </div>
-      </div>
+      </a>
     </div>
-
-    <nav class="transport" aria-label="Tape controls">
-      <a class="tbtn" href="end.html" aria-label="Skip to the end">⏭</a>
-      <a class="tbtn tbtn--play" href="#board" id="play"><span class="tbtn__tri" aria-hidden="true"></span>Press play</a>
-      <span class="transport__hint">see the map</span>
-    </nav>
   </header>
 
   <main>
-    <!-- ══════════════ THE MAP BOARD ══════════════ -->
-    <section class="board-sec" id="board" aria-labelledby="board-title">
+    <!-- ══════════════ 2 · THE ROUTE (10 seconds) ══════════════ -->
+    <section class="board-sec" id="route" aria-labelledby="route-title">
       <div class="spot spot--board" aria-hidden="true"></div>
       <img class="prop prop--flashlight" src="assets/props/flashlight.webp" width="676" height="733" alt="" aria-hidden="true" decoding="async" loading="lazy" />
       <div class="frame">
         <div class="board" id="boardEl">
-          <svg class="strings" aria-hidden="true"><g></g></svg>
-
           <header class="board__head">
-            <h2 id="board-title" class="chalk-title" data-bind="title">My Journey</h2>
-            <p class="chalk board__sub">two years · <span id="evCount">6</span> stops · one map</p>
+            <h2 id="route-title" class="chalk-title">The route</h2>
+            <p class="chalk board__sub">Tehuacán, Puebla → Santa Ana, Costa Rica</p>
           </header>
 
-          <div class="board__grid" id="boardGrid">
-            <div class="maps">
+          <div class="maps maps--row">
             <figure class="map map--flight">
-              <div class="map__paper">
-                <div class="map__area">
-                  <svg class="map__svg" id="flightSvg" viewBox="0 0 400 292" aria-hidden="true"></svg>
-                  <div class="map__pins" id="flightPins"></div>
-                </div>
-              </div>
+              <div class="map__paper"><div class="map__area">
+                <svg class="map__svg" id="flightSvg" viewBox="0 0 400 292" aria-hidden="true"></svg>
+                <div class="map__pins" id="flightPins"></div>
+              </div></div>
               <figcaption class="sr-only">Map of Mexico and Central America with the flight from Tehuacán, Puebla to Santa Ana, Costa Rica.</figcaption>
             </figure>
             <figure class="map" id="map">
-              <div class="map__paper">
-                <div class="map__area">
-                  <svg class="map__svg" id="mapSvg" viewBox="0 0 360 360" aria-hidden="true"></svg>
-                  <div class="map__pins" id="mapPins"></div>
-                </div>
-              </div>
-              <figcaption class="sr-only">Hand-drawn map of Costa Rica with every stop of the journey marked.</figcaption>
+              <div class="map__paper"><div class="map__area">
+                <svg class="map__svg" id="mapSvg" viewBox="0 0 360 360" aria-hidden="true"></svg>
+                <div class="map__pins" id="mapPins"></div>
+              </div></div>
+              <figcaption class="sr-only">Map of Costa Rica with every stop of the journey marked.</figcaption>
             </figure>
-            </div>
-            <!-- stop polaroids rendered here -->
           </div>
 
           <div class="board__props">
-            <div class="notepad">
+            <nav class="legend" aria-label="Stops">
               <span class="pin pin--green" aria-hidden="true"></span>
-              <p class="notepad__h">Traveler profile</p>
-              <dl id="profile"></dl>
-            </div>
-
-            <div class="doodles" aria-hidden="true">
-              <span class="chalk doodle doodle--secret">WISH YOU WERE HERE</span>
-              <span class="chalk doodle doodle--q">!!!</span>
-              <svg class="doodle-thumb" viewBox="0 0 60 60"><path d="M18 52 V28 M18 28 h-8 v24 h8 M18 30 l10 -18 c4 -6 10 -2 8 4 l-3 10 h14 c5 0 7 5 4 8 c3 3 1 7 -2 8 c2 3 0 7 -4 7 c1 4 -2 6 -6 6 H22" /></svg>
-            </div>
+              <p class="legend__h">The stops</p>
+              <ol id="legend"></ol>
+            </nav>
 
             <article class="news news--board">
               <span class="pin pin--red" aria-hidden="true"></span>
-              <header class="news__mast"><p class="news__name">The UWCCR Times</p><p class="news__line"><span>Extra edition</span><span data-bind="years">2024 — 2026</span><span>1 colón</span></p></header>
+              <header class="news__mast"><p class="news__name">The UWCCR Times</p><p class="news__line"><span>Extra edition</span><span data-bind="years">2025 — 2027</span><span>1 colón</span></p></header>
               <h3 class="news__head">Student spends two years at UWC, refuses to be summarized in 650 words</h3>
-              <p class="news__body" aria-hidden="true">SANTA ANA — After two years, eighteen time zones of friends and an unreasonable amount of gallo pinto, the student has declined every attempt to fit the experience into a single essay. “It’s easier with pictures,” the student said, pointing at the board. Editors agree. Readers are advised to start at stop one and follow the red string. Further coverage on every page of this edition.</p>
+              <p class="news__body" aria-hidden="true">SANTA ANA — After two years, classmates from more than seventy countries and an unreasonable amount of gallo pinto, the student has declined every attempt to fit the experience into a single essay. “It’s easier with pictures,” he said, pointing at the board. Editors agree. Readers are advised to start at stop one and keep scrolling. Further coverage below.</p>
             </article>
           </div>
 
@@ -165,11 +129,26 @@
         </div>
         <div class="tray" aria-hidden="true"><i></i><i></i><i class="tray__eraser"></i></div>
       </div>
+    </section>
 
-      <div class="start">
-        <a class="tbtn tbtn--play" id="startLink" href="stop.html"><span class="tbtn__tri" aria-hidden="true"></span>Start the journey</a>
-        <span class="transport__hint">stop 01 · <span id="startTitle">Arrival</span></span>
+    <!-- ══════════════ 3 · THE STOPS (~90 seconds) ══════════════ -->
+    <section class="case stops" id="stops" aria-label="The stops"></section>
+
+    <!-- ══════════════ 4 · SO WHAT (10 seconds) ══════════════ -->
+    <section class="closed" id="end" aria-labelledby="end-title">
+      <div class="spot spot--closed" aria-hidden="true"></div>
+      <img class="prop prop--walkman" src="assets/props/walkman.webp" width="533" height="681" alt="" aria-hidden="true" decoding="async" loading="lazy" />
+      <div class="folder">
+        <span class="folder__tab">MY JOURNEY · <b data-bind="years">2025 — 2027</b></span>
+        <div class="folder__page">
+          <h2 id="end-title" class="typed">WHAT I'M TAKING WITH ME</h2>
+          <ol class="takeaways" id="takeaways"></ol>
+          <p class="verdict" data-bind="nextStop">Next stop: university.</p>
+          <span class="bigstamp" aria-hidden="true">TO BE CONTINUED</span>
+        </div>
       </div>
+      <p class="credits-line" data-bind="credits"></p>
+      <a class="tbtn tbtn--rewind" href="#top" id="rewind"><span aria-hidden="true">⏪</span> Rewind</a>
     </section>
   </main>
 

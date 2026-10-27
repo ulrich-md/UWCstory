@@ -1,195 +1,166 @@
 /*
  * ─────────────────────────────────────────────────────────────
- *  MY JOURNEY · content file
- *  This is the only file you need to edit.
+ *  MY JOURNEY · content file — the only file you need to edit.
  *
- *  · Each item in `events` becomes:
- *      – a track on the cassette's tracklist
- *      – a polaroid + pin on the map board (home page)
- *      – its own page: stop.html?id=<id>
- *  · Add, remove or reorder events freely.
- *  · coords: [latitude, longitude]
- *    (Google Maps → right-click a place → copy the numbers).
- *    Stops inside Costa Rica go on the Costa Rica map; anything
- *    outside (like Tehuacán) goes on the flight map above it.
- *    Stops in the same place share one pin (e.g. Santa Ana).
- *  · layout: "cluster" | "row" | "bag"  (leave empty to rotate).
- *  · The FIRST photo of each event is its cover.
- *  · Notes are handwritten-style: keep them SHORT.
+ *  One page, ~2 minutes. Each item in `stops` becomes a pin on
+ *  the map, a line in the map legend and a block on the page.
+ *
+ *  · coords: [latitude, longitude]. Stops in Costa Rica go on the
+ *    Costa Rica map; anything else (Tehuacán) on the flight map.
+ *  · `places` (instead of coords) = one block with several pins,
+ *    e.g. weekend trips.
+ *  · `line`: 1–2 sentences in your own voice. This is what the
+ *    officer actually reads — keep it short and specific.
+ *  · `fact`: one number or detail, shown as a sticker (optional).
+ *  · The FIRST photo is the big one; the rest open in the viewer.
+ *  · ⚠ Photos and dates marked TODO are still placeholders.
  * ─────────────────────────────────────────────────────────────
  */
 window.JOURNEY = {
   title: "My Journey",
-  from: { place: "Tehuacán, Puebla", coords: [18.46, -97.39] },
-  name: "Ulrich",
+  name: "Ulrich Mohrhardt Doger",
+  short: "Ulrich",
   school: "UWC Costa Rica",
-  years: "2024 — 2026",
-  portrait: { src: "photos/cover/portrait.webp", w: 900, h: 1100, alt: "Portrait of Ulrich holding a vintage camera" },
+  years: "2025 — 2027",
+  meta: ["UWC Costa Rica · Class of 2027", "Grieg Scholar", "From Tehuacán, Puebla"],
+  from: { place: "Tehuacán, Puebla", coords: [18.46, -97.39] },
+  portrait: { src: "photos/cover/portrait.webp", w: 760, h: 950, alt: "Ulrich smiling in a black jacket in front of the UWC Costa Rica sign" },
 
-  /* The "traveler profile" notepad on the board — the 10-second summary */
-  profile: [
-    ["Name", "Ulrich"],
-    ["Based in", "UWC Costa Rica"],
-    ["Known for", "Making strangers laugh"],
-    ["Trusted by", "Friends from 30+ countries"],
-    ["Weakness", "Gallo pinto"],
-  ],
+  /* The hero sentence. Draft — change it until it sounds like you. */
+  thesis: "In the band back home, it never mattered how well I played if the person next to me was off.",
+  thesisSub: "Two years in Costa Rica have mostly been about that same thing.",
 
-  events: [
+  stops: [
     {
       id: "tehuacan",
-      title: "Leaving Tehuacán",
-      date: "Aug 2024",
+      title: "Tehuacán",
+      date: "2021 — 2025",
       place: "Tehuacán, Puebla",
       coords: [18.46, -97.39],
-      headline: "Local student packs one suitcase, leaves Tehuacán for two years in Costa Rica",
-      note: "One suitcase. Two years. No idea what was coming.",
-      chalk: ["home", "✈"],
-      photos: [
-        { src: "photos/e1/05.webp", w: 1000, h: 750, alt: "Railway tracks crossing a bridge", caption: "last morning at home" },
-        { src: "photos/e1/04.webp", w: 1400, h: 933, alt: "Silhouette looking over a misty city", caption: "the view I left" },
-        { src: "photos/e5/02.webp", w: 1400, h: 933, alt: "Person walking toward a sunset", caption: "here we go" },
+      line: "Four years as lead saxophone in my school's marching band. The section only sounded good when everyone did, and that was my job.",
+      fact: "lead sax · 4 years",
+      photos: [ // TODO: your photos from home / the band
+        { src: "photos/e1/05.webp", w: 1000, h: 750, alt: "Railway tracks crossing a bridge", caption: "home" },
+        { src: "photos/e1/04.webp", w: 1400, h: 933, alt: "Silhouette looking over a misty city", caption: "the last morning" },
       ],
     },
     {
-      id: "residence",
-      title: "Home Away From Home",
-      date: "Sep 2024",
+      id: "arrival",
+      title: "Arrival",
+      date: "Aug 2025",
       place: "Santa Ana",
       coords: [9.93, -84.18],
-      headline: "Room full of strangers declared a family by unanimous vote",
-      note: "My residence: the people I came home to every night.",
-      chalk: ["home #2", "!!"],
-      photos: [
-        { src: "photos/e1/03.webp", w: 900, h: 900, alt: "Green door in a yellow wall", caption: "our door" },
-        { src: "photos/e6/02.webp", w: 1000, h: 800, alt: "Friends talking in a café", caption: "sunday crew" },
-        { src: "photos/e2/02.webp", w: 1000, h: 750, alt: "Pug wrapped in a blanket on a bed", caption: "movie night" },
-        { src: "photos/e2/05.webp", w: 900, h: 900, alt: "Tea being poured into a cup", caption: "3am talks" },
+      line: "One suitcase, a full scholarship and two hundred classmates from more than seventy countries.",
+      fact: "Grieg Scholar · 1 of 9",
+      photos: [ // TODO
+        { src: "photos/e1/01.webp", w: 1000, h: 800, alt: "Two people on a bench facing the sea", caption: "first week" },
+        { src: "photos/e1/03.webp", w: 900, h: 900, alt: "Green door in a yellow wall", caption: "my door" },
+      ],
+    },
+    {
+      id: "axiom",
+      title: "Team Axiom",
+      date: "Sep 2025 — Feb 2026",
+      place: "Santa Ana",
+      coords: [9.93, -84.18],
+      line: "Six students, six countries, one portfolio for the Wharton competition. Our first idea failed the backtest, so we started over.",
+      fact: "+26% in 6 months",
+      photos: [ // TODO
+        { src: "photos/e5/04.webp", w: 1000, h: 750, alt: "Laptop and notebook on a desk", caption: "2am, the model" },
+        { src: "photos/e4/03.webp", w: 1000, h: 750, alt: "Vintage film camera", caption: "pitch day" },
       ],
     },
     {
       id: "bald-for-a-cause",
       title: "Bald for a Cause",
-      date: "Nov 2024",
+      date: "2026", // TODO: month
       place: "Santa Ana",
       coords: [9.93, -84.18],
-      headline: "Students shave their heads for a cause; campus runs out of hats",
-      note: "We shaved it all off. It grew back. The money stayed.",
-      chalk: ["brave?", "ha!"],
-      photos: [
+      line: "We shaved our heads so our hair could become wigs for people going through cancer treatment. It grew back. That was the point.",
+      fact: "hair donated",
+      photos: [ // TODO
         { src: "photos/e2/03.webp", w: 1000, h: 750, alt: "Brown bear staring at the camera", caption: "before" },
-        { src: "photos/e4/05.webp", w: 1000, h: 800, alt: "Friend taking a photo with a camera", caption: "the moment" },
-        { src: "photos/e2/01.webp", w: 1000, h: 750, alt: "Pug wrapped in a blanket in a forest", caption: "after (cold)" },
-        { src: "photos/e1/02.webp", w: 1000, h: 800, alt: "Crowd crossing a busy street", caption: "the whole school came" },
+        { src: "photos/e4/05.webp", w: 1000, h: 800, alt: "Friend taking a photo with a camera", caption: "after" },
       ],
     },
     {
-      id: "axiom",
-      title: "Axiom",
-      date: "Feb 2025",
-      place: "Santa Ana",
-      coords: [9.93, -84.18],
-      headline: "Investment rookies pitch to the judges and survive the questions",
-      note: "Axiom: my first investment competition. Spreadsheets at 2am.",
-      chalk: ["the pitch", "→ $$$"],
-      photos: [
-        { src: "photos/e5/04.webp", w: 1000, h: 750, alt: "Laptop and notebook on a desk", caption: "the model" },
-        { src: "photos/e4/03.webp", w: 1000, h: 750, alt: "Vintage film camera on a piano", caption: "pitch day" },
-        { src: "photos/e2/04.webp", w: 1000, h: 750, alt: "Black puppy looking up", caption: "waiting for results" },
+      id: "agents-of-change",
+      title: "Agents of Change",
+      date: "2025 — 2026", // TODO
+      place: "Desamparados",
+      coords: [9.88, -84.06],
+      line: "A camp at Parque La Libertad with kids who already had the drive. We only brought the tools — and mostly watched.",
+      fact: "facilitator",
+      photos: [ // TODO
+        { src: "photos/e4/02.webp", w: 1000, h: 750, alt: "Hiker standing in a misty valley", caption: "camp day" },
+        { src: "photos/e5/02.webp", w: 1400, h: 933, alt: "Person walking toward a sunset", caption: "the kids' ideas" },
       ],
     },
     {
-      id: "culture-night",
-      title: "Culture Night",
-      date: "Mar 2025",
+      id: "supernova",
+      title: "SUPERNOVA",
+      date: "2025 — 2027",
+      place: "Los Anonos, Escazú",
+      coords: [9.94, -84.12],
+      line: "Computers rebuilt from e-waste, handed over with lessons. A computer does very little until someone shows you how to use it.",
+      fact: "chapter cofounder",
+      photos: [ // TODO
+        { src: "photos/e4/04.webp", w: 1000, h: 800, alt: "Reading in tall grass", caption: "Los Anonos" },
+        { src: "photos/e5/03.webp", w: 1400, h: 933, alt: "Tea cup and flowers on a bed", caption: "first boot" },
+      ],
+    },
+    {
+      id: "weekends",
+      title: "Weekends away",
+      date: "2025 — 2026",
+      place: "Guanacaste · Puerto Viejo · Cartago",
+      places: [
+        { name: "Guanacaste", coords: [10.45, -85.45] },
+        { name: "Puerto Viejo", coords: [9.65, -82.75] },
+        { name: "Cartago", coords: [9.86, -83.92] },
+      ],
+      line: "The other half of the education: long bus rides, rice and beans, and friends I'll have for life.",
+      photos: [ // TODO: one photo per place works best
+        { src: "photos/e4/01.webp", w: 1000, h: 800, alt: "Paddling a canoe on a lake", caption: "Guanacaste" },
+        { src: "photos/e6/05.webp", w: 900, h: 900, alt: "Fresh strawberries", caption: "Puerto Viejo" },
+        { src: "photos/e1/02.webp", w: 1000, h: 800, alt: "Crowd crossing a busy street", caption: "Cartago" },
+      ],
+    },
+    {
+      id: "residence",
+      title: "Tortuguero Residence",
+      date: "Aug 2026",
       place: "Santa Ana",
       coords: [9.93, -84.18],
-      headline: "Eighteen countries, one stage, zero rehearsals: crowd demands encore",
-      note: "Every table had a different grandmother's recipe.",
-      chalk: ["!!!", "encore"],
-      photos: [
+      line: "A year ago I was the one arriving. Now I'm the Resident Assistant who is still awake at 11pm when someone is homesick.",
+      fact: "15 first-years · 12+ countries",
+      photos: [ // TODO
+        { src: "photos/e6/02.webp", w: 1000, h: 800, alt: "Friends talking in a café", caption: "our first night" },
+        { src: "photos/e2/02.webp", w: 1000, h: 750, alt: "Pug wrapped in a blanket on a bed", caption: "movie night" },
+      ],
+    },
+    {
+      id: "central-american-week",
+      title: "Central American Week",
+      date: "Sep 2026",
+      place: "Santa Ana",
+      coords: [9.93, -84.18],
+      line: "Project manager for a week of music, food and history. Thirty volunteers didn't have to listen to me, so every part had to feel like theirs.",
+      fact: "30 volunteers · 1 week",
+      photos: [ // TODO
         { src: "photos/e3/01.webp", w: 900, h: 900, alt: "Musician on stage under a spotlight", caption: "the dance" },
-        { src: "photos/e3/02.webp", w: 900, h: 900, alt: "Colourful clothes on a rack", caption: "costume chaos" },
-        { src: "photos/e3/04.webp", w: 900, h: 900, alt: "Bowl of food from above", caption: "someone's home" },
-        { src: "photos/e3/03.webp", w: 900, h: 900, alt: "Coffee on a wooden table", caption: "café chorreado" },
-      ],
-    },
-    {
-      id: "guanacaste",
-      title: "Guanacaste",
-      date: "Apr 2025",
-      place: "Guanacaste",
-      coords: [10.45, -85.45],
-      headline: "Group trip ends with sunburn and forty new inside jokes",
-      note: "Sunsets, dust roads and the loudest bus in Costa Rica.",
-      chalk: ["sunburn", "→"],
-      photos: [
-        { src: "photos/e1/01.webp", w: 1000, h: 800, alt: "Two friends on a bench at sunset", caption: "first sunset" },
-        { src: "photos/e4/01.webp", w: 1000, h: 800, alt: "Paddling a canoe on a lake", caption: "plan B" },
-        { src: "photos/e6/04.webp", w: 1000, h: 750, alt: "Walruses piled on a beach", caption: "us at the beach" },
-        { src: "photos/e4/04.webp", w: 1000, h: 800, alt: "Reading in tall grass", caption: "the break" },
-      ],
-    },
-    {
-      id: "puerto-viejo",
-      title: "Puerto Viejo",
-      date: "Jul 2025",
-      place: "Puerto Viejo",
-      coords: [9.65, -82.75],
-      headline: "Caribbean weekend: students learn the rhythm, forget the time",
-      note: "Rice and beans with coconut. I'm never going back.",
-      chalk: ["pura vida", "♫"],
-      photos: [
-        { src: "photos/e6/05.webp", w: 900, h: 900, alt: "Fresh strawberries", caption: "the market" },
-        { src: "photos/e3/05.webp", w: 900, h: 900, alt: "Vegetables on a cutting board", caption: "cooking lesson" },
-        { src: "photos/e6/03.webp", w: 1400, h: 933, alt: "Person under the Milky Way", caption: "the stars there" },
-      ],
-    },
-    {
-      id: "cartago",
-      title: "Cartago",
-      date: "Sep 2025",
-      place: "Cartago",
-      coords: [9.86, -83.92],
-      headline: "Volunteers spend the weekend building, painting and listening",
-      note: "Community work in Cartago. We came to help; we learned more.",
-      chalk: ["important", "→ us"],
-      photos: [
-        { src: "photos/e4/02.webp", w: 1000, h: 750, alt: "Hiker standing in a misty valley", caption: "the road up" },
-        { src: "photos/e5/03.webp", w: 1400, h: 933, alt: "Tea cup and flowers on a bed", caption: "the family we met" },
-        { src: "photos/e5/01.webp", w: 1400, h: 933, alt: "Person in a hood facing the sea", caption: "thinking about it" },
-      ],
-    },
-    {
-      id: "graduation",
-      title: "Graduation",
-      date: "May 2026",
-      place: "Santa Ana",
-      coords: [9.93, -84.18],
-      headline: "Journey complete? Witnesses say the story is just beginning",
-      note: "Strangers in August. Family by May.",
-      chalk: ["the end?", "♥"],
-      photos: [
-        { src: "photos/e6/01.webp", w: 1000, h: 800, alt: "Two friends hugging on a street", caption: "the goodbye" },
-        { src: "photos/e1/01.webp", w: 1000, h: 800, alt: "Two people on a bench facing the sea", caption: "one last sunset" },
-        { src: "photos/e6/03.webp", w: 1400, h: 933, alt: "Person under the Milky Way", caption: "what's next" },
+        { src: "photos/e3/04.webp", w: 900, h: 900, alt: "Bowl of food from above", caption: "someone's grandmother's recipe" },
+        { src: "photos/e3/02.webp", w: 900, h: 900, alt: "Colourful clothes on a rack", caption: "costumes" },
       ],
     },
   ],
 
+  /* Closing: three things you're taking with you (short!) */
+  takeaways: [
+    "Make the people around you sound good.",
+    "Start over when the evidence says so.",
+    "Be there at 11pm.",
+  ],
   nextStop: "Next stop: university.",
-
-  /* Liner notes (back of the cassette case) — ask permission for names */
-  cast: [
-    ["Amara", "Kenya"], ["Mateo", "Argentina"], ["Lina", "Norway"],
-    ["Yusuf", "Jordan"], ["Sofía", "Costa Rica"], ["Kenji", "Japan"],
-    ["Priya", "India"], ["Elif", "Türkiye"], ["Tomás", "Chile"],
-    ["Nia", "Ghana"], ["Lukas", "Germany"], ["Mei", "China"],
-  ],
-  credits: [
-    ["Recorded live at", "UWC Costa Rica"],
-    ["Produced by", "Ulrich"],
-    ["Catering", "Gallo pinto, every single morning"],
-    ["Special thanks", "Everyone who stayed up to talk"],
-  ],
+  credits: "Photos by my friends at UWC Costa Rica. Site designed and built by me.",
 };
