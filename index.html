@@ -3,68 +3,54 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>My Journey — Ulrich Mohrhardt Doger · UWC Costa Rica</title>
-  <meta name="description" content="A two-minute visual journey: from Tehuacán, Puebla to UWC Costa Rica, Class of 2027." />
+  <title>My Journey — Ulrich Mohrhardt Doger</title>
+  <meta name="description" content="Two years at UWC Costa Rica, left on a desk in photos. From Tehuacán, Puebla." />
   <meta name="theme-color" content="#1c120b" />
   <meta property="og:title" content="My Journey — Ulrich Mohrhardt Doger" />
-  <meta property="og:description" content="From Tehuacán, Puebla to UWC Costa Rica. A two-minute visual journey." />
+  <meta property="og:description" content="From Tehuacán, Puebla to UWC Costa Rica, in photos." />
   <meta property="og:image" content="photos/cover/portrait.webp" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='2' y='12' width='60' height='40' rx='6' fill='%23e9ecf2'/%3E%3Crect x='12' y='24' width='40' height='14' rx='7' fill='%231d2456'/%3E%3Ccircle cx='21' cy='31' r='5' fill='%23cfd4de'/%3E%3Ccircle cx='43' cy='31' r='5' fill='%23cfd4de'/%3E%3Crect x='16' y='44' width='32' height='4' fill='%23c8102e'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Fredoka:wght@500;600;700&family=Gochi+Hand&family=Playfair+Display:ital,wght@0,700;0,900;1,500;1,700&family=Special+Elite&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&text=TheUWCCRimsDalyNw&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Gochi+Hand&family=Playfair+Display:ital,wght@0,900;1,500&family=Special+Elite&family=VT323&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preload" as="image" href="photos/cover/portrait.webp" />
   <link rel="preload" as="image" href="assets/tex/desk.webp" />
 </head>
-<body data-page="home">
-  <a class="skip" href="#route">Skip to the route</a>
+<body data-page="desk">
+  <a class="skip" href="#moments">Skip to the photos</a>
 
-  <!-- ══════════════ 1 · WHO (10 seconds) ══════════════ -->
+  <!-- the opening: who, in one look -->
   <header class="deck" id="top">
     <div class="spot spot--deck" aria-hidden="true"></div>
-    <!-- real objects: CC0 Poly Haven scans, rendered with the site's top-left key light -->
     <img class="prop prop--camera" src="assets/props/camera.webp" width="749" height="801" alt="" aria-hidden="true" decoding="async" />
     <img class="prop prop--specs" src="assets/props/spectacles.webp" width="773" height="331" alt="" aria-hidden="true" decoding="async" />
 
-    <div class="deck__stamp" aria-hidden="true">
-      <span>UWC · COSTA RICA</span>
-      <small>entry · <b data-bind="years">2025 — 2027</b></small>
-    </div>
-
     <div class="hero">
       <figure class="hero__photo">
-        <span class="hero-tape" aria-hidden="true"></span>
+        <span class="washi washi--a" aria-hidden="true"></span>
         <img id="heroPhoto" src="photos/cover/portrait.webp" width="760" height="950" alt="" fetchpriority="high" />
         <figcaption>me, UWC Costa Rica</figcaption>
       </figure>
 
       <div class="hero__card">
-        <p class="hero__kicker">My Journey · Tehuacán → Costa Rica</p>
         <h1 class="hero__name" data-bind="name">Ulrich Mohrhardt Doger</h1>
-        <ul class="hero__meta" id="heroMeta"></ul>
+        <p class="hero__line" data-bind="line"></p>
         <blockquote class="hero__thesis"><p id="thesis"></p></blockquote>
-        <p class="hero__sub" id="thesisSub"></p>
-        <div class="hero__cta">
-          <a class="tbtn tbtn--play" href="#route" id="play"><span class="tbtn__tri" aria-hidden="true"></span>Press play</a>
-          <span class="hero__time">2-minute scroll · <span id="stopCount">9</span> stops</span>
-        </div>
+        <a class="hero__go" href="#moments" id="play"><span class="hand">this is what the essay couldn't fit</span><span class="hero__arrow" aria-hidden="true">↓</span></a>
       </div>
 
       <!-- the tape: decorative, its reels wind as you scroll -->
-      <a class="cassette cassette--prop" id="cassette" href="#route" aria-label="Play the journey">
+      <a class="cassette cassette--prop" id="cassette" href="#moments" aria-label="Start">
         <div class="cassette__shell">
           <span class="screw screw--tl"></span><span class="screw screw--tr"></span>
           <span class="screw screw--bl"></span><span class="screw screw--br"></span>
           <div class="label">
             <div class="label__holo" aria-hidden="true"></div>
-            <div class="label__top">
-              <div>
-                <p class="label__title">My <span>Journey</span></p>
-                <p class="label__sub">side A · 2025 — side B · 2027</p>
-              </div>
-            </div>
+            <div class="label__top"><div>
+              <p class="label__title">My <span>Journey</span></p>
+              <p class="label__sub">side A · 2025 — side B · 2027</p>
+            </div></div>
             <div class="window">
               <div class="reel reel--l"><span class="reel__tape"></span><span class="reel__hub"><i></i></span></div>
               <div class="window__mid"><span class="window__ticks"></span><span class="window__nums"><i>100</i><i>50</i><i>0</i></span></div>
@@ -80,75 +66,38 @@
     </div>
   </header>
 
-  <main>
-    <!-- ══════════════ 2 · THE ROUTE (10 seconds) ══════════════ -->
-    <section class="board-sec" id="route" aria-labelledby="route-title">
-      <div class="spot spot--board" aria-hidden="true"></div>
-      <img class="prop prop--flashlight" src="assets/props/flashlight.webp" width="676" height="733" alt="" aria-hidden="true" decoding="async" loading="lazy" />
-      <div class="frame">
-        <div class="board" id="boardEl">
-          <header class="board__head">
-            <h2 id="route-title" class="chalk-title">The route</h2>
-            <p class="chalk board__sub">Tehuacán, Puebla → Santa Ana, Costa Rica</p>
-          </header>
-
-          <div class="maps maps--row">
-            <figure class="map map--flight">
-              <div class="map__paper"><div class="map__area">
-                <svg class="map__svg" id="flightSvg" viewBox="0 0 400 292" aria-hidden="true"></svg>
-                <div class="map__pins" id="flightPins"></div>
-              </div></div>
-              <figcaption class="sr-only">Map of Mexico and Central America with the flight from Tehuacán, Puebla to Santa Ana, Costa Rica.</figcaption>
-            </figure>
-            <figure class="map" id="map">
-              <div class="map__paper"><div class="map__area">
-                <svg class="map__svg" id="mapSvg" viewBox="0 0 360 360" aria-hidden="true"></svg>
-                <div class="map__pins" id="mapPins"></div>
-              </div></div>
-              <figcaption class="sr-only">Map of Costa Rica with every stop of the journey marked.</figcaption>
-            </figure>
-          </div>
-
-          <div class="board__props">
-            <nav class="legend" aria-label="Stops">
-              <span class="pin pin--green" aria-hidden="true"></span>
-              <p class="legend__h">The stops</p>
-              <ol id="legend"></ol>
-            </nav>
-
-            <article class="news news--board">
-              <span class="pin pin--red" aria-hidden="true"></span>
-              <header class="news__mast"><p class="news__name">The UWCCR Times</p><p class="news__line"><span>Extra edition</span><span data-bind="years">2025 — 2027</span><span>1 colón</span></p></header>
-              <h3 class="news__head">Student spends two years at UWC, refuses to be summarized in 650 words</h3>
-              <p class="news__body" aria-hidden="true">SANTA ANA — After two years, classmates from more than seventy countries and an unreasonable amount of gallo pinto, the student has declined every attempt to fit the experience into a single essay. “It’s easier with pictures,” he said, pointing at the board. Editors agree. Readers are advised to start at stop one and keep scrolling. Further coverage below.</p>
-            </article>
-          </div>
-
-          <img class="prop prop--compass" src="assets/props/compass.webp" width="420" height="553" alt="" aria-hidden="true" decoding="async" loading="lazy" />
-          <img class="prop prop--magnifier" src="assets/props/magnifier.webp" width="447" height="975" alt="" aria-hidden="true" decoding="async" loading="lazy" />
-        </div>
-        <div class="tray" aria-hidden="true"><i></i><i></i><i class="tray__eraser"></i></div>
-      </div>
+  <main class="table" id="moments">
+    <!-- the maps lie on the desk like everything else -->
+    <section class="spread spread--maps" aria-label="From Tehuacán to Costa Rica">
+      <figure class="map map--flight">
+        <div class="map__paper"><div class="map__area">
+          <svg class="map__svg" id="flightSvg" viewBox="0 0 400 292" aria-hidden="true"></svg>
+          <div class="map__pins" id="flightPins"></div>
+        </div></div>
+        <figcaption class="sr-only">Map of Mexico and Central America with the flight from Tehuacán, Puebla to Santa Ana, Costa Rica.</figcaption>
+      </figure>
+      <figure class="map map--cr">
+        <div class="map__paper"><div class="map__area">
+          <svg class="map__svg" id="mapSvg" viewBox="0 0 360 360" aria-hidden="true"></svg>
+          <div class="map__pins" id="mapPins"></div>
+        </div></div>
+        <figcaption class="sr-only">Map of Costa Rica with the places in these photos marked.</figcaption>
+      </figure>
+      <p class="note note--map"><span class="note__meta" id="distance"></span><span class="note__hand">I left with one suitcase. These are the places that filled it back up.</span></p>
+      <img class="prop prop--compass" src="assets/props/compass.webp" width="420" height="553" alt="" aria-hidden="true" decoding="async" loading="lazy" />
     </section>
 
-    <!-- ══════════════ 3 · THE STOPS (~90 seconds) ══════════════ -->
-    <section class="case stops" id="stops" aria-label="The stops"></section>
+    <!-- moments are rendered here from js/data.js -->
+    <div id="flow"></div>
 
-    <!-- ══════════════ 4 · SO WHAT (10 seconds) ══════════════ -->
-    <section class="closed" id="end" aria-labelledby="end-title">
-      <div class="spot spot--closed" aria-hidden="true"></div>
+    <section class="spread spread--end" aria-label="A last note">
       <img class="prop prop--walkman" src="assets/props/walkman.webp" width="533" height="681" alt="" aria-hidden="true" decoding="async" loading="lazy" />
-      <div class="folder">
-        <span class="folder__tab">MY JOURNEY · <b data-bind="years">2025 — 2027</b></span>
-        <div class="folder__page">
-          <h2 id="end-title" class="typed">WHAT I'M TAKING WITH ME</h2>
-          <ol class="takeaways" id="takeaways"></ol>
-          <p class="verdict" data-bind="nextStop">Next stop: university.</p>
-          <span class="bigstamp" aria-hidden="true">TO BE CONTINUED</span>
-        </div>
+      <div class="letter">
+        <span class="washi washi--b" aria-hidden="true"></span>
+        <div id="letter"></div>
+        <p class="letter__sig" data-bind="signature">— Ulrich</p>
       </div>
-      <p class="credits-line" data-bind="credits"></p>
-      <a class="tbtn tbtn--rewind" href="#top" id="rewind"><span aria-hidden="true">⏪</span> Rewind</a>
+      <a class="rewind" href="#top" id="rewind"><span aria-hidden="true">⏪</span> rewind</a>
     </section>
   </main>
 

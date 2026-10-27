@@ -1,5 +1,5 @@
-/* MY JOURNEY · one-page renderer + interactions (no dependencies)
- * 1 who (hero) → 2 the route (maps) → 3 the stops → 4 what I'm taking with me
+/* MY JOURNEY · photos scattered on a desk under a lamp (no dependencies)
+ * opening (who) → maps on the desk → moments, one after another → a last note
  */
 (() => {
   const D = window.JOURNEY;
@@ -10,25 +10,15 @@
   const esc = (s = "") =>
     String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const pad = (n, l = 2) => String(n).padStart(l, "0");
-  const S = D.stops;
-  const half = Math.ceil(S.length / 2);
-  const sideOf = (i) => (i < half ? "A" : "B");
-  const anchor = (st) => `#stop-${st.id}`;
+  const M = D.moments;
 
-  /* ── Shared chrome: svg filters, HUD, lightbox, light + film grade ── */
-  document.body.insertAdjacentHTML(
-    "afterbegin",
-    `<svg class="defs" aria-hidden="true" focusable="false" width="0" height="0"><defs>
-      <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/></filter>
-    </defs></svg>`
-  );
+  /* ── Shared chrome: HUD, lightbox, lamp light + film grade ── */
   document.body.insertAdjacentHTML(
     "beforeend",
     `<div class="hud" aria-hidden="true">
       <span class="hud__tape"><i class="hud__reel"></i><i class="hud__reel"></i></span>
-      <span class="hud__side" id="hudSide">SIDE A</span>
       <span class="hud__count" id="hudCount">000</span>
-      <span class="hud__label" id="hudLabel">INTRO</span>
+      <span class="hud__label" id="hudLabel"></span>
     </div>
     <dialog class="lightbox" id="lightbox" aria-label="Photo viewer">
       <figure class="lightbox__frame"><img id="lb-img" src="" alt="" />
@@ -46,25 +36,26 @@
     const v = D[el.dataset.bind];
     if (v != null) el.textContent = v;
   });
+  $("#heroPhoto").src = D.portrait.src;
+  $("#heroPhoto").alt = D.portrait.alt;
+  $("#thesis").textContent = `“${D.thesis}”`;
+  $("#letter").innerHTML = D.letter.map((l) => `<p>${esc(l)}</p>`).join("");
 
   /* ── Photos + lightbox registry ─────────────────────── */
   const all = [];
-  const reg = (p, st, i) => all.push({ ...p, st, i }) - 1;
-  const img = (p) =>
-    `<img src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="${esc(p.alt)}" loading="lazy" decoding="async" />`;
-  const zoom = (gi, inner) =>
-    `<button class="zoom" type="button" data-open="${gi}" aria-label="Open photo: ${esc(all[gi].alt)}">${inner}</button>`;
-  const pin = (k) => `<span class="pin pin--${["red", "green", "yellow"][k % 3]}" aria-hidden="true"></span>`;
+  const reg = (p, m, i) => all.push({ ...p, m, i }) - 1;
+  const zoom = (gi, p) =>
+    `<button class="zoom" type="button" data-open="${gi}" aria-label="Open photo: ${esc(p.alt)}"><img src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="${esc(p.alt)}" loading="lazy" decoding="async" /></button>`;
+  // the orange date an old camera prints in the corner: "8 '25"
+  const months = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
+  const stampOf = (when = "") => {
+    const y = (when.match(/(20\d\d)(?!.*20\d\d)/) || [])[1];
+    if (!y) return "";
+    const mo = months[(when.match(/[a-z]{3}/i) || [""])[0].toLowerCase()];
+    return `${mo ? mo + " " : ""}'${y.slice(2)}`;
+  };
 
-  /* ── Hero ───────────────────────────────────────────── */
-  $("#heroPhoto").src = D.portrait.src;
-  $("#heroPhoto").alt = D.portrait.alt;
-  $("#heroMeta").innerHTML = D.meta.map((m) => `<li>${esc(m)}</li>`).join("");
-  $("#thesis").textContent = `“${D.thesis}”`;
-  $("#thesisSub").textContent = D.thesisSub;
-  $("#stopCount").textContent = S.length;
-
-  /* ── Maps (Natural Earth coastlines) ────────────────── */
+  /* ── Maps on the desk (Natural Earth coastlines) ────── */
   const proj = ([lat, lon]) => [(lon + 86.05) * 100, (11.55 - lat) * 100];
   const projLL = ([lon, lat]) => proj([lat, lon]);
   // Catmull-Rom → cubic Bézier, with optional jitter for a sketchy second stroke
@@ -85,12 +76,13 @@
     return d + (closed ? "Z" : "");
   }
   const inCR = ([lat, lon]) => lat > 8 && lat < 11.4 && lon > -86.2 && lon < -82.4;
-  // every point on the map: a stop, or one place of a multi-place stop
-  const spots = S.flatMap((st, i) =>
-    st.places ? st.places.map((pl) => ({ i, name: pl.name, coords: pl.coords })) : [{ i, name: st.place, coords: st.coords }]
-  );
-  const badge = (i) =>
-    `<a class="mpin__x" href="${anchor(S[i])}" data-mpin="${i}" aria-label="Stop ${i + 1}: ${esc(S[i].title)}">${i + 1}</a>`;
+  // every place in the photos, once (the campus first)
+  const places = [{ place: D.campus.place, coords: D.campus.coords }];
+  M.forEach((m) => (m.places || (m.coords ? [{ place: m.where, coords: m.coords }] : [])).forEach((p) => {
+    if (!places.some((q) => Math.hypot(q.coords[0] - p.coords[0], q.coords[1] - p.coords[1]) < 0.05)) places.push(p);
+  }));
+  const dot = (p, x, y, w, h, flip) =>
+    `<div class="mpin mpin--dot${flip ? " mpin--flip" : ""}" style="left:${(x / w) * 100}%;top:${(y / h) * 100}%"><span class="mpin__x" aria-hidden="true"></span><span class="mpin__l">${esc(p.place)}</span></div>`;
 
   (function renderCR() {
     const G = window.GEO;
@@ -100,36 +92,24 @@
       .map(projLL)
       .map(([x, y], i) => `<path class="mtn" d="M${x - 9},${y + 5} l9,-12 l9,12 ${i % 2 ? `M${x + 4},${y + 5} l6,-8 l6,8` : ""}"/>`)
       .join("");
-    const local = spots.filter((p) => inCR(p.coords));
+    const local = places.filter((p) => inCR(p.coords));
     $("#mapSvg").innerHTML = `
       ${neighbours}
-      <text class="nb" x="70" y="14">NICARAGUA</text>
-      <text class="nb" transform="translate(352 300) rotate(-90)">PANAMÁ</text>
       <path class="land land--fill" d="${smooth(outline)}"/>
       <path class="land" d="${smooth(outline, true, 2.2, 3)}"/>
       <path class="land land--2" d="${smooth(outline, true, 3.2, 11)}"/>
       ${mountains}
-      <path class="route" d="${smooth(local.map((p) => proj(p.coords)), false)}"/>
       <text class="sea" x="40" y="292">Pacific</text>
       <text class="sea" x="250" y="62">Caribbean</text>
-      <g class="compass" transform="translate(320 140)">
-        <circle r="18"/><circle r="12" class="c2"/>
-        <path d="M0,-26 L4,0 L0,26 L-4,0Z" class="needle"/><path d="M-26,0 L0,3.5 L26,0 L0,-3.5Z" class="needle needle--h"/>
-        <text y="-30" text-anchor="middle">N</text>
-      </g>
       <text class="map-title" x="14" y="348">Costa Rica</text>`;
-    // points in the same place (the campus) share one pin, numbers stacked upwards
-    const groups = [];
-    local.forEach((p) => {
-      const g = groups.find((g) => Math.hypot(g.coords[0] - p.coords[0], g.coords[1] - p.coords[1]) < 0.08);
-      if (g) { if (!g.items.includes(p.i)) g.items.push(p.i); }
-      else groups.push({ coords: p.coords, name: p.name, items: [p.i] });
-    });
-    $("#mapPins").innerHTML = groups.map((g) => {
-      const [x, y] = proj(g.coords);
-      const stack = g.items.length > 2;
-      return `<div class="mpin${x > 250 || stack ? " mpin--flip" : ""}${stack ? " mpin--stack" : ""}" style="left:${(x / 360) * 100}%;top:${(y / 360) * 100}%">
-        <span class="mpin__badges">${g.items.map(badge).join("")}</span><span class="mpin__l">${esc(g.name)}</span></div>`;
+    // nearby places (campus, Desamparados, Cartago) get their labels fanned out: left, above, below
+    const placed = [];
+    $("#mapPins").innerHTML = local.map((p) => {
+      const [x, y] = proj(p.coords);
+      const near = placed.filter(([px, py]) => Math.hypot(px - x, py - y) < 34).length;
+      placed.push([x, y]);
+      const cls = near === 0 ? "" : near === 1 ? " mpin--above" : " mpin--below";
+      return dot(p, x, y, 360, 360, x > 250 || (near === 0 && p === local[0])).replace('class="mpin mpin--dot', `class="mpin mpin--dot${cls}`);
     }).join("");
   })();
 
@@ -140,8 +120,7 @@
       .map(([code, runs]) => runs.map((r) => `<path class="land${code === "cri" ? " land--cr" : ""}${r.c ? "" : " land--open"}" d="${smooth(r.p.map(([lon, lat]) => fproj([lat, lon])), r.c)}"/>`).join(""))
       .join("");
     const a = fproj(D.from.coords);
-    const firstCR = spots.find((p) => inCR(p.coords));
-    const b = fproj(firstCR ? firstCR.coords : [9.93, -84.18]);
+    const b = fproj(D.campus.coords);
     // the arc bows out over the Pacific, like the real flight
     const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
     const dx = b[0] - a[0], dy = b[1] - a[1];
@@ -154,104 +133,93 @@
     $("#flightSvg").innerHTML = `
       ${lands}
       ${lbl("MÉXICO", 20.6, -99.6, "nb nb--big")}${lbl("GUATEMALA", 15.9, -91.6)}${lbl("HONDURAS", 14.9, -87.6)}${lbl("NICARAGUA", 12.9, -86.2)}${lbl("COSTA RICA", 10.6, -83.6, "nb nb--cr")}
-      ${lbl("Pacific Ocean", 11.2, -97.6, "sea")}${lbl("Caribbean Sea", 17.4, -84.6, "sea")}${lbl("Gulf of Mexico", 22.1, -95.6, "sea")}
+      ${lbl("Pacific Ocean", 11.2, -97.6, "sea")}${lbl("Caribbean Sea", 17.4, -84.6, "sea")}
       <path class="flight" d="M${a[0]},${a[1]} Q${c[0]},${c[1]} ${b[0]},${b[1]}"/>
-      <g class="plane" transform="translate(${px} ${py}) rotate(${ang})"><path d="M10 0 L-6 -3 L-9 -9 L-11 -9 L-8 -2.4 L-13 -2 L-15 -5 L-17 -5 L-15 0 L-17 5 L-15 5 L-13 2 L-8 2.4 L-11 9 L-9 9 L-6 3 Z"/></g>
-      <text class="map-title" x="14" y="280">The flight</text>`;
-    const far = spots.filter((p) => !inCR(p.coords));
-    $("#flightPins").innerHTML =
-      far.map((p) => { const [x, y] = fproj(p.coords); return `<div class="mpin" style="left:${(x / 400) * 100}%;top:${(y / 292) * 100}%"><span class="mpin__badges">${badge(p.i)}</span><span class="mpin__l">${esc(p.name)}</span></div>`; }).join("") +
-      `<div class="mpin mpin--flip" style="left:${(b[0] / 400) * 100}%;top:${(b[1] / 292) * 100}%"><span class="mpin__badges"><a class="mpin__x mpin__x--dest" href="#map" aria-label="Costa Rica map">★</a></span><span class="mpin__l">Santa Ana · campus</span></div>`;
+      <g class="plane" transform="translate(${px} ${py}) rotate(${ang})"><path d="M10 0 L-6 -3 L-9 -9 L-11 -9 L-8 -2.4 L-13 -2 L-15 -5 L-17 -5 L-15 0 L-17 5 L-15 5 L-13 2 L-8 2.4 L-11 9 L-9 9 L-6 3 Z"/></g>`;
+    $("#flightPins").innerHTML = dot(D.from, a[0], a[1], 400, 292, false) + dot(D.campus, b[0], b[1], 400, 292, true);
+    // great-circle distance for the little note on the desk
+    const rad = (d) => (d * Math.PI) / 180;
+    const [la1, lo1] = D.from.coords.map(rad), [la2, lo2] = D.campus.coords.map(rad);
+    const km = 6371 * 2 * Math.asin(Math.sqrt(Math.sin((la2 - la1) / 2) ** 2 + Math.cos(la1) * Math.cos(la2) * Math.sin((lo2 - lo1) / 2) ** 2));
+    $("#distance").textContent = `${D.from.place} → ${D.campus.place} · ${(Math.round(km / 100) * 100).toLocaleString("en")} km`;
   })();
 
-  $("#legend").innerHTML = S.map((st, i) => `
-    <li><a href="${anchor(st)}"><b>${pad(i + 1)}</b><span>${esc(st.title)}</span><i>${esc(st.places ? st.places.map((p) => p.name).join(" · ") : st.place)}</i></a></li>`).join("");
+  /* ── Moments: little collages, no titles ────────────── */
+  // slot = [left %, top %, width %, rotation, kind]; kind p = polaroid, r = print, w = wide print
+  const T = {
+    five: { h: 0.74, slots: [[3, 3, 35, -3, "p"], [40, 0, 29, 3, "r"], [72, 7, 24, -5, "p"], [42, 42, 27, -2, "r"], [24, 60, 18, 6, "p"]], note: [71, 58, 26, 2] },
+    four: { h: 0.66, slots: [[1, 20, 30, -4, "r"], [29, 0, 27, 3, "p"], [57, 26, 25, -2, "r"], [78, 4, 21, 5, "p"]], note: [26, 62, 36, -1.5] },
+    three: { h: 0.6, slots: [[4, 8, 44, -2, "w"], [50, 0, 24, 4, "p"], [75, 24, 23, -3, "r"]], note: [52, 64, 34, 2] },
+  };
+  const pick = (n) => (n >= 5 ? T.five : n === 4 ? T.four : T.three);
+  const washi = ["a", "b", "c", "d"];
+  const propsBetween = [
+    { after: 1, src: "flashlight", w: 676, h: 733, side: "r" },
+    { after: 3, src: "magnifier", w: 447, h: 975, side: "l" },
+    { after: 5, src: "spectacles", w: 773, h: 331, side: "r" },
+    { after: 7, src: "camera", w: 749, h: 801, side: "l" },
+  ];
 
-  /* ── The stops, one after another ───────────────────── */
-  const rots = [-4, 3, -2, 5, -5, 2, 4];
-  $("#stops").innerHTML = S.map((st, i) => {
-    const gis = st.photos.map((p, k) => reg(p, st, k));
-    let media;
-    if (st.places) {
-      media = `<div class="st__strip">${st.photos.map((p, k) => `
-        <figure class="pol" style="--rot:${rots[(k + i) % rots.length]}deg;--i:${k}">${pin(k)}${zoom(gis[k], img(p))}<figcaption class="pol__cap">${esc(p.caption)}</figcaption></figure>`).join("")}</div>`;
-    } else {
-      const [p0, p1] = st.photos;
-      media = `
-        <figure class="pol pol--big" style="--rot:${rots[i % rots.length]}deg;--i:0">${pin(i)}${zoom(gis[0], img(p0))}<figcaption class="pol__cap">${esc(p0.caption)}</figcaption></figure>
-        ${p1 ? `<figure class="pol pol--small" style="--rot:${-rots[i % rots.length] * 1.5}deg;--i:1">${pin(i + 1)}${zoom(gis[1], img(p1))}<figcaption class="pol__cap">${esc(p1.caption)}</figcaption></figure>` : ""}
-        ${st.photos.length > 2 ? `<button class="st__more" type="button" data-open="${gis[2]}">+${st.photos.length - 2} photos</button>` : ""}`;
-    }
+  $("#flow").innerHTML = M.map((m, mi) => {
+    const t = pick(m.photos.length);
+    const flip = mi % 2 === 1; // mirror every other collage so the desk doesn't repeat
+    const stamp = stampOf(m.when);
+    const items = m.photos.slice(0, t.slots.length).map((p, k) => {
+      const gi = reg(p, m, k);
+      let [l, tp, w, r, kind] = t.slots[k];
+      if (flip) { l = 100 - l - w; r = -r; }
+      return `
+        <figure class="ph ph--${kind}" style="--l:${l}%;--t:${tp}%;--w:${w}%;--r:${r}deg;--i:${k}">
+          ${kind !== "p" ? `<span class="washi washi--${washi[(mi + k) % 4]}" aria-hidden="true"></span>` : ""}
+          ${zoom(gi, p)}
+          ${kind !== "p" && stamp ? `<span class="ph__date" aria-hidden="true">${esc(stamp)}</span>` : ""}
+          ${p.caption ? `<figcaption class="ph__cap">${esc(p.caption)}</figcaption>` : ""}
+        </figure>`;
+    }).join("");
+    // photos beyond the template's slots still open in the viewer
+    m.photos.slice(t.slots.length).forEach((p, k) => reg(p, m, t.slots.length + k));
+    let [nl, nt, nw, nr] = t.note;
+    if (flip) { nl = 100 - nl - nw; nr = -nr; }
+    const prop = propsBetween.find((p) => p.after === mi);
     return `
-    <article class="st${i % 2 ? " st--r" : ""}${st.places ? " st--strip" : ""}" id="stop-${st.id}" data-i="${i}" aria-labelledby="st-${st.id}">
-      <svg class="strings" aria-hidden="true"><g></g></svg>
-      <div class="st__media">${media}</div>
-      <div class="st__text">
-        <p class="st__num">STOP ${pad(i + 1)} <span>· side ${sideOf(i)}</span></p>
-        <h2 class="st__title chalk-title" id="st-${st.id}">${esc(st.title)}</h2>
-        <p class="tag"><span>${esc(st.date)}</span><span>${esc(st.place)}</span></p>
-        <div class="st__card">${pin(i + 2)}<p>${esc(st.line)}</p></div>
-        ${st.fact ? `<span class="st__fact">${esc(st.fact)}</span>` : ""}
+    <section class="mo${flip ? " mo--flip" : ""}" data-i="${mi}" aria-label="${esc([m.when, m.where].filter(Boolean).join(", "))}">
+      <div class="mo__collage" style="--h:${t.h}">
+        ${items}
+        <p class="note" style="--l:${nl}%;--t:${nt}%;--w:${nw}%;--r:${nr}deg">
+          <span class="note__meta">${esc([m.when, m.where].filter(Boolean).join(" · "))}</span>
+          <span class="note__hand">${esc(m.note)}</span>
+        </p>
       </div>
-    </article>`;
+      ${prop ? `<img class="prop prop--side prop--${prop.side}" src="assets/props/${prop.src}.webp" width="${prop.w}" height="${prop.h}" alt="" aria-hidden="true" loading="lazy" decoding="async" />` : ""}
+    </section>`;
   }).join("");
 
-  $("#takeaways").innerHTML = D.takeaways.map((t) => `<li>${esc(t)}</li>`).join("");
-
-  /* ── Red string (a cord plus a thin fibre highlight) ── */
-  function draw(container, animate) {
-    const svg = $(":scope > .strings", container);
-    const g = $("g", svg);
-    const pins = $$(".pin", container);
-    const box = container.getBoundingClientRect();
-    svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
-    const c = (el) => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]; };
-    g.innerHTML = pins.slice(1).map((p, k) => {
-      const [x1, y1] = c(pins[k]);
-      const [x2, y2] = c(p);
-      const sag = Math.min(70, Math.hypot(x2 - x1, y2 - y1) * 0.12);
-      const d = `M${x1},${y1} Q${(x1 + x2) / 2},${Math.max(y1, y2) + sag} ${x2},${y2}`;
-      return `<path class="cord" pathLength="1" d="${d}"/><path class="fibre" d="${d}"/>`;
-    }).join("");
-    g.classList.toggle("is-drawn", !animate || reduced);
-    if (animate && !reduced) requestAnimationFrame(() => requestAnimationFrame(() => g.classList.add("is-drawn")));
-  }
-
-  /* ── Reveal on scroll ───────────────────────────────── */
+  /* ── Reveal: photos drop onto the desk as they come into view ── */
   const io = new IntersectionObserver(
     (entries) =>
       entries.forEach((e) => {
         if (!e.isIntersecting) return;
-        const t = e.target;
-        t.classList.add("in");
-        io.unobserve(t);
-        if (t.classList.contains("st")) setTimeout(() => draw(t, true), reduced ? 0 : 1100);
+        e.target.classList.add("in");
+        io.unobserve(e.target);
       }),
-    { rootMargin: "0px 0px -12% 0px", threshold: 0.08 }
+    { rootMargin: "0px 0px -10% 0px", threshold: 0.06 }
   );
-  [$("#boardEl"), ...$$(".st"), $(".folder")].forEach((el) => io.observe(el));
+  [...$$(".mo"), $(".spread--maps"), $(".spread--end")].forEach((el) => io.observe(el));
 
-  /* ── HUD label: whichever section is in the middle of the screen ── */
+  /* ── HUD: just the date of whatever is under the lamp ── */
+  const hudLabel = $("#hudLabel");
   const mid = new IntersectionObserver(
     (entries) =>
       entries.forEach((e) => {
         if (!e.isIntersecting) return;
-        const t = e.target;
-        let side = "A", text;
-        if (t.classList.contains("st")) {
-          const i = +t.dataset.i;
-          side = sideOf(i);
-          text = `STOP ${pad(i + 1)} · ${S[i].title.toUpperCase()}`;
-        } else {
-          side = t.id === "end" ? "B" : "A";
-          text = { top: "INTRO", route: "THE ROUTE", end: "WHAT'S NEXT" }[t.id] || "";
-        }
-        $("#hudSide").textContent = `SIDE ${side}`;
-        $("#hudLabel").textContent = text;
+        const m = M[+e.target.dataset.i];
+        hudLabel.textContent = m ? [m.when, m.where].filter(Boolean).join(" · ").toUpperCase() : e.target.dataset.label || "";
       }),
     { rootMargin: "-50% 0px -50% 0px" }
   );
-  [$("#top"), $("#route"), ...$$(".st"), $("#end")].forEach((el) => mid.observe(el));
+  $(".spread--maps").dataset.label = "THE WAY HERE";
+  $(".spread--end").dataset.label = "SIDE B · SOON";
+  [$(".spread--maps"), ...$$(".mo"), $(".spread--end")].forEach((el) => mid.observe(el));
 
   /* ── Lightbox ───────────────────────────────────────── */
   const lb = $("#lightbox");
@@ -265,8 +233,8 @@
     lbImg.alt = p.alt;
     lbImg.width = p.w;
     lbImg.height = p.h;
-    $("#lb-cap").textContent = p.caption;
-    $("#lb-count").textContent = `STOP ${pad(S.indexOf(p.st) + 1)} · ${p.st.title.toUpperCase()} · ${p.i + 1}/${p.st.photos.length}`;
+    $("#lb-cap").textContent = p.caption || p.m.note;
+    $("#lb-count").textContent = `${[p.m.when, p.m.where].filter(Boolean).join(" · ").toUpperCase()} · ${p.i + 1}/${p.m.photos.length}`;
   }
   document.addEventListener("click", (e) => {
     const b = e.target.closest("[data-open]");
@@ -297,7 +265,7 @@
     sx = null;
   });
 
-  /* ── Desktop extras: cassette tilt + flashlight ─────── */
+  /* ── Desktop extras: cassette tilt + the lamp follows the pointer ── */
   const cassette = $("#cassette");
   cassette.insertAdjacentHTML(
     "afterbegin",
@@ -328,7 +296,7 @@
     }, { passive: true });
   }
 
-  /* ── Scroll: tape winds from reel to reel; HUD counter ── */
+  /* ── Scroll: tape winds from reel to reel ───────────── */
   const reels = $$(".reel", cassette);
   const hud = $(".hud");
   const hudReels = $$(".hud__reel");
@@ -348,7 +316,7 @@
     reels[1].style.setProperty("--spin", `${base / r}deg`);
     hudReels.forEach((h, i) => h.style.setProperty("--spin", `${base / (i ? r : l)}deg`));
     hudCount.textContent = pad(Math.floor(p * 999), 3);
-    hud.classList.toggle("is-on", scrollY > innerHeight * 0.4);
+    hud.classList.toggle("is-on", scrollY > innerHeight * 0.5);
   }
   addEventListener("scroll", () => {
     if (!ticking) {
@@ -370,15 +338,6 @@
   $("#play").addEventListener("click", () => spin(1));
   cassette.addEventListener("click", () => spin(1));
   $("#rewind").addEventListener("click", () => spin(-1));
-
-  let rz;
-  addEventListener("resize", () => {
-    clearTimeout(rz);
-    rz = setTimeout(() => {
-      $$(".st.in").forEach((s) => draw(s, false));
-      frame();
-    }, 150);
-  });
-  document.fonts && document.fonts.ready.then(() => $$(".st.in").forEach((s) => draw(s, false)));
+  addEventListener("resize", frame);
   frame();
 })();
